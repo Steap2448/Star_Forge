@@ -9,7 +9,7 @@ float distance(Celestial_Body a, Celestial_Body b)
 	return dist;
 }
 
-Phase_vector f(Celestial_Body a, Celestial_Body b)
+Phase_vector f(Celestial_Body a, Celestial_Body b) //Тут координатам соответствуют скорости, а скоростям ускорения 
 {
 	float dist = distance(a, b);
 	Phase_vector res = Phase_vector();
@@ -20,24 +20,34 @@ Phase_vector f(Celestial_Body a, Celestial_Body b)
 	return res;
 }
 
-Phase_vector k1(Celestial_Body a, Celestial_Body b, float t_scale)
+Phase_vector k1(Celestial_Body& a, Celestial_Body& b, float t_scale)
 {
 	return f(a, b);
 }
 
-Phase_vector k2(Celestial_Body a, Celestial_Body b, float t_scale, Phase_vector k1)
+Phase_vector k2(Celestial_Body& a, Celestial_Body& b, float t_scale, Phase_vector& k1)
 {
 	return f((a + (k1 * t_scale) / 2), b);//Второе тело неподвижно?
 }
 
-Phase_vector k3(Celestial_Body a, Celestial_Body b, float t_scale, Phase_vector k2)
+Phase_vector k3(Celestial_Body& a, Celestial_Body& b, float t_scale, Phase_vector& k2)
 {
 	return f((a + (k2 * t_scale) / 2), b);//Второе тело неподвижно?
 }
 
-Phase_vector k4(Celestial_Body a, Celestial_Body b, float t_scale, Phase_vector k3)
+Phase_vector k4(Celestial_Body& a, Celestial_Body& b, float t_scale, Phase_vector& k3)
 {
 	return f((a + (k3 * t_scale)), b);//Второе тело неподвижно?
+}
+
+Phase_vector Movement(Celestial_Body& a, Celestial_Body& b, float t_scale)
+{
+	Phase_vector res = Phase_vector();
+	Phase_vector k12 = k1(a, b, t_scale);
+	Phase_vector k22 = k2(a, b, t_scale, k12);
+	Phase_vector k32 = k3(a, b, t_scale, k22);
+	Phase_vector k42 = k4(a, b, t_scale, k32);
+	res = (k12 + (k22 * 2) + (k32 * 2) + k42) * (t_scale / 6);
 }
 
 void Celestial_Body::Move(float t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4)
