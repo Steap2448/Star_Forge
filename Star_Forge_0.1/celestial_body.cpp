@@ -167,3 +167,4 @@ Celestial_Body Celestial_Body::operator -(Phase_vector a)
 	res.v_y-=a.v_y;
 	return res;
 }
+

@@ -1,11 +1,26 @@
-#define G 1
+#define G 6.67408e-11
 
 #include "celestial_body.h"
 #include "math.h"
 
+
+float x(float x_m, float scale)
+{
+	float res = (x_m * (scale))/(6.084e11) + scale/2;
+	//std::cout<<"x: "<<
+	return res;
+}
+
+float y(float y_m, float scale)
+{
+	float res = scale/2 - (y_m * scale)/(6.084e11);
+	return res;
+}
+
 float distance(Celestial_Body a, Celestial_Body b)
 {
 	float dist = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	//std::cout<<"dist"<<dist<<"\n";
 	return dist;
 }
 
@@ -14,9 +29,10 @@ Phase_vector f(Celestial_Body a, Celestial_Body b) //Тут координата
 	float dist = distance(a, b);
 	Phase_vector res = Phase_vector();
 	res.x = a.v_x;
-	res.x = a.v_y;
-	res.v_x =(G * a.Mass * b.Mass * (b.x - a.x) )/ (dist * dist * dist);
-	res.v_y = (G * a.Mass * b.Mass * (b.y - a.y)) / (dist * dist * dist);
+	res.y = a.v_y;
+	res.v_x = (G *  b.Mass * (b.x - a.x) )/(dist * dist * dist);
+	res.v_y = (G *  b.Mass * (b.y - a.y))/(dist * dist * dist);
+	//std::cout<<"f"<<res;
 	return res;
 }
 
@@ -48,6 +64,8 @@ Phase_vector Movement(Celestial_Body& a, Celestial_Body& b, float t_scale)
 	Phase_vector k32 = k3(a, b, t_scale, k22);
 	Phase_vector k42 = k4(a, b, t_scale, k32);
 	res = (k12 + (k22 * 2) + (k32 * 2) + k42) * (t_scale / 6);
+	//std::cout<<"Movement"<<res;
+	return res;
 }
 
 void Celestial_Body::Move(float t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4)
