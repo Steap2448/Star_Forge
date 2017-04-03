@@ -93,12 +93,44 @@ class Celestial_Body: public Phase_vector
 	float w_y;
 	float Radius;
 	float Mass;
+	Color color;
+	Texture texture;
 	Celestial_Body();
 	Celestial_Body(const Celestial_Body& other);
 	Celestial_Body(float a, float b, float c, float d, float e, float f, float g, float k); 
+	Celestial_Body operator =(Celestial_Body a);
 	Celestial_Body operator +(Phase_vector a);
 	Celestial_Body operator -(Phase_vector a);
+	int operator ==(Celestial_Body a);
+	int operator !=(Celestial_Body a);
+	friend std::ostream& operator<<(std::ostream& os, Celestial_Body& a)
+	{
+		os<<"("<<a.x<<","<<a.y<<","<<a.v_x<<","<<a.v_y<<")\n";
+		return os;
+	}
 	void Move(float t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4);
+};
+
+typedef struct _Atlas_node
+{
+	Celestial_Body body;
+	CircleShape avatar;
+	_Atlas_node* next;
+} *Atlas_node, Atlas_node_el;
+
+class Atlas
+{
+	public:
+	Atlas_node first;
+	Atlas_node last;
+	int amount;
+	Atlas();
+	Atlas(Celestial_Body a);
+	void add(Celestial_Body a);
+	//void remove(Celestial_Body a);
+	void del();
+	void draw(RenderWindow window);
+	void move();
 };
 
 
