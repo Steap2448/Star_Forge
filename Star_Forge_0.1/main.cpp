@@ -1,11 +1,11 @@
 #define WIDTH 600
 #define T_SCALE 1
 
-#include "celestial_body_atl.h"
+#include "celestial_body.h"
 #include <SFML/Graphics.hpp>
 #include <iostream> 
-#include "method_atl.cpp"
-#include "celestial_body_atl.cpp"
+#include "method.cpp"
+#include "celestial_body.cpp"
 using namespace sf;
 int main()
 {
