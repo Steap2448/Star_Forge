@@ -1,5 +1,5 @@
 #include <iostream>
-#include "celestial_body_atl.h"
+#include "celestial_body.h"
 using namespace std;
 
 //Vector section
