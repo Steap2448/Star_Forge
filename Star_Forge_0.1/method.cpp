@@ -1,6 +1,6 @@
 #define G 6.67408e-11
 
-#include "celestial_body_atl.h"
+#include "celestial_body.h"
 #include "math.h"
 
 
