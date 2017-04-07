@@ -39,7 +39,7 @@ Phase_vector f(Celestial_Body a, Atlas atl) //Тут координатам со
 			dist = distance(a, tmp->body);
 			res.v_x = res.v_x + (G *  tmp->body.Mass * (tmp->body.x - a.x) )/(dist * dist * dist);
 			res.v_y = res.v_y + (G *  tmp->body.Mass * (tmp->body.y - a.y))/(dist * dist * dist);
-			std::cout<<"v_x"<<res.v_x<<"v_y"<<res.v_y<<"\n";
+			//std::cout<<"v_x"<<res.v_x<<"v_y"<<res.v_y<<"\n";
 		}
 		tmp = tmp->next;
 	}	
@@ -70,15 +70,15 @@ Phase_vector Movement(Celestial_Body& a, Atlas& atl, float t_scale)
 {
 	Phase_vector res = Phase_vector();
 	Phase_vector k12 = k1(a, atl, t_scale);
-	std::cout<<"k1"<<k12;
+	//std::cout<<"k1"<<k12;
 	Phase_vector k22 = k2(a, atl, t_scale, k12);
-	std::cout<<"k2"<<k22;
+	//std::cout<<"k2"<<k22;
 	Phase_vector k32 = k3(a, atl, t_scale, k22);
-	std::cout<<"k3"<<k32;
+	//std::cout<<"k3"<<k32;
 	Phase_vector k42 = k4(a, atl, t_scale, k32);
-	std::cout<<"k4"<<k42;
+	//std::cout<<"k4"<<k42;
 	res = (k12 + (k22 * 2) + (k32 * 2) + k42) * (t_scale / 6);
-	std::cout<<"Movement"<<res;
+	//std::cout<<"Movement"<<res;
 	return res;
 }
 

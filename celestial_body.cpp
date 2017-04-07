@@ -221,13 +221,13 @@ void Atlas::add(Celestial_Body a)
 	CircleShape avat(a.Radius);
 	avat.setOrigin(a.Radius,a.Radius);
 	tmp->avatar = avat;
-	cout<<"1\n";
+	//cout<<"1\n";
 	if(last != NULL)
 	{
 	last->next = tmp;
-	cout<<"2\n";
+	//cout<<"2\n";
 	last = last -> next;
-	cout<<"3\n";
+	//cout<<"3\n";
 	}
 	else
 	{
