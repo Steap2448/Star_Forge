@@ -2,7 +2,7 @@
 #include "celestial_body.h"
 using namespace std;
 
-//Vector section
+//Vector section //test
 Vector::Vector()
 {
 	x = 0;
