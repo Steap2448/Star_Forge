@@ -9,7 +9,7 @@ Vector::Vector()
 	y = 0;
 }
 
-Vector::Vector(float a, float b)
+Vector::Vector(double a, double b)
 {
 	x = a;
 	y = b;
@@ -21,12 +21,12 @@ void Vector::set()
 	y = 0;
 }
 
-void Vector::set(float a)
+void Vector::set(double a)
 {
 	x = a;
 }
 
-void Vector::set(float a, float b)
+void Vector::set(double a, double b)
 {
 	x = a;
 	y = b;
@@ -48,7 +48,7 @@ Vector Vector::operator -(Vector b)
 	return c;
 }
 
-float Vector::abs(Vector a)
+double Vector::abs(Vector a)
 {
 	return (a.x * a.x)+(a.y * a.y);
 }
@@ -60,7 +60,7 @@ Phase_vector::Phase_vector()
 	v_x = 0;
 	v_y = 0;
 }
-Phase_vector::Phase_vector(float a, float b, float c, float d)
+Phase_vector::Phase_vector(double a, double b, double c, double d)
 {
 	x = a;
 	y = b;
@@ -68,14 +68,14 @@ Phase_vector::Phase_vector(float a, float b, float c, float d)
 	v_y = d;
 }
 
-Phase_vector::Phase_vector(float a, float b)
+Phase_vector::Phase_vector(double a, double b)
 {
 	x = a;
 	y = b;
 	v_x = 0;
 	v_y = 0;
 }
-Phase_vector Phase_vector::operator *(float a)
+Phase_vector Phase_vector::operator *(double a)
 {
 	Phase_vector res = Phase_vector();
 	res.x = x * a;
@@ -84,7 +84,7 @@ Phase_vector Phase_vector::operator *(float a)
 	res.v_y = v_y * a;
 	return res;
 }
-Phase_vector Phase_vector::operator /(float a)
+Phase_vector Phase_vector::operator /(double a)
 {
 	Phase_vector res = Phase_vector();
 	res.x = x / a;
@@ -122,6 +122,7 @@ Celestial_Body::Celestial_Body()
 	w_y = 0;
 	Radius = 0;
 	Mass = 0;
+	texture_path = "";
 }
 
 Celestial_Body::Celestial_Body(const Celestial_Body& other)
@@ -136,7 +137,7 @@ Celestial_Body::Celestial_Body(const Celestial_Body& other)
 	Mass = other.Mass;
 }
 
-Celestial_Body::Celestial_Body(float a, float b, float c, float d, float e, float f, float g, float k)
+Celestial_Body::Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k, std::string t)//добавленный конструктор
 {
 	x = a;
 	y = b;
@@ -146,6 +147,20 @@ Celestial_Body::Celestial_Body(float a, float b, float c, float d, float e, floa
 	w_y = f;
 	Radius = g;
 	Mass = k;
+	texture_path = t;
+}
+
+Celestial_Body::Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k)
+{
+	x = a;
+	y = b;
+	v_x = c;
+	v_y = d;
+	w_x = e;
+	w_y = f;
+	Radius = g;
+	Mass = k;
+	texture_path = "";
 }
 
 Celestial_Body Celestial_Body::operator +(Phase_vector a)
@@ -176,6 +191,19 @@ Celestial_Body Celestial_Body::operator =(Celestial_Body a)
 	v_y = a.v_y;
 	Radius = a.Radius;
 	Mass = a.Mass;
+	return *this;
+}
+
+Celestial_Body Celestial_Body::operator =(Celestial_Body *a) //added by Nestor
+{
+	x = a->x;
+	y = a->y;
+	v_x = a->v_x;
+	v_y = a->v_y;
+	Radius = a->Radius;
+	Mass = a->Mass;  
+	texture_path = a->texture_path;
+	return *this;
 }
 
 /*int Celestial_Body::operator ==(Celestial_Body a)
@@ -212,20 +240,18 @@ Atlas::Atlas(Celestial_Body a)
 	amount = 1;
 }
 
-void Atlas::add(Celestial_Body a)
+void Atlas::add(Celestial_Body* a) //changed by Nestor
 {
 	Atlas_node tmp = new Atlas_node_el;
 	tmp->body = a;
 	tmp->next = NULL;
-	CircleShape avat(a.Radius);
+	CircleShape avat(a->Radius);
+	avat.setOrigin(a->Radius,a->Radius);
 	tmp->avatar = avat;
-	cout<<"1\n";
 	if(last != NULL)
 	{
 	last->next = tmp;
-	cout<<"2\n";
 	last = last -> next;
-	cout<<"3\n";
 	}
 	else
 	{

@@ -8,13 +8,13 @@ using namespace sf;
 class Vector
 {
 	public:
-	float x;
-	float y;
+	double x;
+	double y;
 	Vector();
-	Vector(float a, float b);
+	Vector(double a, double b);
 	void set();
-	void set(float x);
-	void set(float x, float y);
+	void set(double x);
+	void set(double x, double y);
 	
 	Vector operator +=(Vector a)
 	{
@@ -31,7 +31,7 @@ class Vector
 	Vector operator +(Vector b);
 	Vector operator -(Vector b);
 	
-	float abs(Vector a); //возвращает квадрат модуля 
+	double abs(Vector a); //возвращает квадрат модуля 
 	
 /////////////////////////////////////Секция ввода/вывода
 	friend std::ostream& operator<<(std::ostream& os, Vector& a)
@@ -42,7 +42,7 @@ class Vector
 	
 	friend std::istream& operator>>(std::istream& os, Vector& a)
 	{
-		float c, b;
+		double c, b;
 		os>>c;
 		os>>b;
 		a.x = c;
@@ -54,13 +54,13 @@ class Vector
 class Phase_vector: public Vector
 {
 	public:
-	float v_x;
-	float v_y;
+	double v_x;
+	double v_y;
 	Phase_vector();
-	Phase_vector(float a, float b);
-	Phase_vector(float a, float b, float c, float d);
-	Phase_vector operator *(float a);
-	Phase_vector operator /(float a);
+	Phase_vector(double a, double b);
+	Phase_vector(double a, double b, double c, double d);
+	Phase_vector operator *(double a);
+	Phase_vector operator /(double a);
 	Phase_vector operator +(Phase_vector a);
 	Phase_vector operator -(Phase_vector a);
 	/////////////////////////////////////Секция ввода/вывода
@@ -72,7 +72,7 @@ class Phase_vector: public Vector
 	
 	friend std::istream& operator>>(std::istream& os, Phase_vector& a)
 	{
-		float c, b, f, g;
+		double c, b, f, g;
 		os>>c;
 		os>>b;
 		os>>f;
@@ -89,16 +89,19 @@ class Phase_vector: public Vector
 class Celestial_Body: public Phase_vector
 {
 	public:
-	float w_x;
-	float w_y;
-	float Radius;
-	float Mass;
+	double w_x;
+	double w_y;
+	double Radius;
+	double Mass;
+	std::string texture_path;
 	Color color;
 	Texture texture;
 	Celestial_Body();
 	Celestial_Body(const Celestial_Body& other);
-	Celestial_Body(float a, float b, float c, float d, float e, float f, float g, float k); 
+	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k); 
+	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k, std::string t);
 	Celestial_Body operator =(Celestial_Body a);
+	Celestial_Body operator =(Celestial_Body* a);
 	Celestial_Body operator +(Phase_vector a);
 	Celestial_Body operator -(Phase_vector a);
 	int operator ==(Celestial_Body a);
@@ -108,7 +111,7 @@ class Celestial_Body: public Phase_vector
 		os<<"("<<a.x<<","<<a.y<<","<<a.v_x<<","<<a.v_y<<")\n";
 		return os;
 	}
-	void Move(float t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4);
+	void Move(double t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4);
 };
 
 typedef struct _Atlas_node
@@ -121,12 +124,13 @@ typedef struct _Atlas_node
 class Atlas
 {
 	public:
+	std::string name;
 	Atlas_node first;
 	Atlas_node last;
 	int amount;
 	Atlas();
 	Atlas(Celestial_Body a);
-	void add(Celestial_Body a);
+	void add(Celestial_Body* a);
 	//void remove(Celestial_Body a);
 	void del();
 	void draw(RenderWindow window);

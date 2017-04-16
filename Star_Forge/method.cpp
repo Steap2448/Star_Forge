@@ -115,3 +115,4 @@ void draw(Atlas atl, RenderWindow* window)
 	}	
 	return;
 }
+
