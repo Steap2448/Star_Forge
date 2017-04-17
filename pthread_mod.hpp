@@ -1,9 +1,6 @@
 #ifndef PTHREAD_MOD
 #define PTHREAD_MOD
 
-#include <pthread.h>
-#include "celestial_body.h"
-
 struct arg
 {
 	Atlas* atlas;

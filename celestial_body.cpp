@@ -1,6 +1,4 @@
-#include <iostream>
-#include "celestial_body.h"
-using namespace std;
+#include "celestial_body.hpp"
 
 //Vector section
 Vector::Vector()
@@ -242,7 +240,7 @@ Atlas::Atlas(Celestial_Body a)
 	Atlas_node tmp = new Atlas_node_el;
 	tmp->body = a;
 	tmp->next = NULL;
-	CircleShape avat(a.Radius);
+	sf::CircleShape avat(a.Radius);
 	tmp->avatar = avat;
 	first = tmp;
 	last = tmp;
@@ -254,7 +252,7 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 	Atlas_node tmp = new Atlas_node_el;
 	tmp->body = a;
 	tmp->next = NULL;
-	CircleShape avat(a->Radius);
+	sf::CircleShape avat(a->Radius);
 	avat.setOrigin(a->Radius,a->Radius);
 	tmp->avatar = avat;
 	if(last != NULL)
@@ -307,7 +305,7 @@ void Atlas::out()
 	Atlas_node tmp1 = first; 
 	while (tmp1 != NULL)
 	{
-		cout<<"Atlas "<<tmp1->body<<"\n";
+		std::cout<<"Atlas "<<tmp1->body<<"\n";
 		tmp1 = tmp1->next;
 	}
 	return;

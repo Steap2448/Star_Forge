@@ -1,4 +1,4 @@
-#include "pthread_mod.h"
+#include "pthread_mod.hpp"
 
 Pthread_array::Pthread_array()
 {
@@ -27,11 +27,7 @@ void Pthread_array::join()
 	for (i = 0; i <= current; i ++) pthread_join(thread[i], NULL);//rewrite in future
 	for (i = 0; i <= current; i ++)
 	{
-		cout<<"tmp before "<<*(argument[i].a)<<"\n";
-		cout<<"tmp before speed"<<argument[i].a->v_x<<" "<<argument[i].a->v_x<<"\n";
 		*(argument[i].a) += argument[i].res; ;
-		cout<<"tmp after "<<*(argument[i].a)<<"\n";
-		cout<<"tmp after speed"<<argument[i].a->v_x<<" "<<argument[i].a->v_x<<"\n";
 	}
 	current = 0;
 	return;
@@ -39,16 +35,13 @@ void Pthread_array::join()
 	
 void Pthread_array::next()
 {
-	if((current + 1) >= amount)//consider rewriting
+	if((current + 1) >= amount)
 	{
 		Pthread_array::join();
 		current = 0;
-		//cout<<"current "<<current<<"\n";
 		return;
 	}
 	current++;
-	//cout<<"current "<<current<<"\n";
-	//cout<<"amount "<<amount<<"\n";
 	return;
 }
 
@@ -121,14 +114,11 @@ Pthread_base::Pthread_base(int a, Atlas* atl)
 			if ((i == amount))
 			{
 				argument[i - 1].finish = tmp;
-				cout<<"k "<<tmp->body.Mass<<"\n";
 				break;
 			}
 			if (i != 0)
 			{
 				argument[i - 1].finish = tmp;
-				cout<<"i "<<i<<"\n";
-				cout<<"k "<<tmp->body.Mass<<"\n";
 				tmp = tmp -> next;
 			}
 			k = argument[i].amount;
@@ -198,6 +188,6 @@ void Pthread_base::launch(double t_scale, double step, double scale)
 	Pthread_base::equip(t_scale, step, scale);
 	int i;
 	for(i = 0; i < amount; i ++) pthread_create(&(thread[i]), &tattr, Motion_paral_mod,(void*) &(argument[i]));
-	for(i = 0; i < amount; i ++) if(pthread_join(thread[i], NULL) != 0) cout<<"join error\n";
+	for(i = 0; i < amount; i ++) pthread_join(thread[i], NULL);
 	return;
 }
