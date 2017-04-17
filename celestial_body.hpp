@@ -1,10 +1,6 @@
 #ifndef CELESTIAL_BODY
 #define CELESTIAL_BODY
 
-#include <iostream>
-#include <SFML/Graphics.hpp>
-using namespace sf;
-
 class Vector
 {
 	public:
@@ -97,8 +93,8 @@ class Celestial_Body: public Phase_vector
 	double Mass;
 	Phase_vector mov;
 	std::string texture_path;
-	Color color;
-	Texture texture;
+	sf::Color color;
+	sf::Texture texture;
 	Celestial_Body();
 	Celestial_Body(const Celestial_Body& other);
 	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k); 
@@ -115,13 +111,12 @@ class Celestial_Body: public Phase_vector
 		os<<"("<<a.x<<","<<a.y<<","<<a.v_x<<","<<a.v_y<<")\n";
 		return os;
 	}
-	void Move(double t_scale, Phase_vector k1, Phase_vector k2, Phase_vector k3, Phase_vector k4);
 };
 
 typedef struct _Atlas_node
 {
 	Celestial_Body body;
-	CircleShape avatar;
+	sf::CircleShape avatar;
 	_Atlas_node* next;
 } *Atlas_node, Atlas_node_el;
 
@@ -137,7 +132,7 @@ class Atlas
 	void add(Celestial_Body* a);
 	//void remove(Celestial_Body a);
 	void del();
-	void draw(RenderWindow window);
+	void draw(sf::RenderWindow window);
 	void move(double scale);
 	void out();
 };
