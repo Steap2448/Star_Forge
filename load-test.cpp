@@ -14,6 +14,25 @@ int main()
 	load_system(name, &atl);
 	atl.name = "Load_result";
 	save_system(atl, "Load_result");
-	//dir_open();
+	filename_list name_list;
+	dir_preview(&name_list);
+	
+	
+	
+	filename *tmp = name_list.first;
+	while(tmp != NULL)
+	{
+		std::cout<<tmp->name<<std::endl;
+		tmp = tmp->next;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	atl.del();
 	return 0;
 }

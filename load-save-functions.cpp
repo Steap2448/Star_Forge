@@ -8,6 +8,44 @@ std::string SAVES="Saves/";
 std::string DOTTXT=".txt";
 
 
+typedef struct _filename
+{
+	std::string name;
+	_filename *next;
+} filename;
+
+
+class filename_list
+{
+	public:
+	filename *first;
+	filename *last;
+	filename_list()
+	{
+		first = NULL;
+		last = NULL;
+	}
+	void add(std::string str)
+	{
+		filename *tmp = new filename;
+		tmp->next = NULL;
+		tmp->name = str;
+		
+		
+		if(last != NULL)
+		{
+			last->next = tmp;
+			last = last -> next;
+		}
+		else
+		{
+			last = tmp;
+			first = tmp;
+		}
+	}
+	
+};
+
 
 int save_system(Atlas atl, std::string name)
 {
@@ -48,25 +86,15 @@ void load_system(std::string file_name, Atlas* atl)
 }
 
 
-void dir_preview()
+void dir_preview(filename_list *list_ptr)
 {
 	DIR* dir_ptr = opendir("Saves");
 	
-	
-	
-	
-	
-	closedir(dir_ptr);
-	return;
-}
-
-
-
-void dir_open()
-{
-	DIR* dir_ptr = opendir("Saves");
-	
-	
+	int i = 0;
+	for(i = 0; i < 2; i++)
+	{
+		struct dirent* tmp = readdir(dir_ptr);
+	}
 	while(1)
 	{
 		struct dirent* tmp = readdir(dir_ptr);
@@ -75,13 +103,19 @@ void dir_open()
 			closedir(dir_ptr);
 			return;
 		}
-		std::cout << tmp->d_name <<std::endl;
+		
+		std::string file_name = tmp->d_name;
+		file_name = file_name.substr(0, file_name.find("."));         //убирание окончания .txt
+		//std::cout << "file_name = "<<file_name <<std::endl;
+		
+		//std::cout << tmp->d_name <<std::endl;
+		list_ptr->add(file_name);
+		
+		
 	}
-
+	
+	
+	
+	closedir(dir_ptr);
+	return;
 }
-
-
-
-
-
-
