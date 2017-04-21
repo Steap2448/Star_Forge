@@ -1,6 +1,6 @@
 #define G 6.67408e-11
 
-#include "method_Dorman_Prince.hpp"
+#include "method_Dormand_Prince.hpp"
 
 void Phase_space::operator +=(Phase_space a)
 {

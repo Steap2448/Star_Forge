@@ -79,6 +79,17 @@ class Phase_space
 		return;
 	}
 	
+	void expand(int a)
+	{
+		delete[] object;
+		delete[] mass;
+		amount = a;
+		object = new Phase_vector[amount];
+		for(int i = 0; i < amount; i++) object[i] = Phase_vector();
+		mass = new double[amount];
+		
+	}
+	
 	
 	~Phase_space()
 	{
