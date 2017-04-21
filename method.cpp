@@ -2,8 +2,6 @@
 
 #include "method.hpp"
 
-using namespace sf;
-
 pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 //
 double x(double x_m, double scale)
@@ -56,8 +54,8 @@ Phase_vector f(Celestial_Body* a, Atlas* atl, Phase_vector* k, int kn, double st
 	if ((kn == 2)||(kn == 3)) k_tmp = (*k) / 2;
 	else k_tmp = (*k);
 	Phase_vector res = Phase_vector();
-	res.x = ((a -> v_x) + step * (k_tmp.v_x));
-	res.y = ((a -> v_y) + step * (k_tmp.v_y));
+	res.x = ((a -> v_x) + (k_tmp.v_x));
+	res.y = ((a -> v_y) + (k_tmp.v_y));
 	res.v_x = 0;
 	res.v_y = 0;
 	int i=0;
@@ -67,8 +65,8 @@ Phase_vector f(Celestial_Body* a, Atlas* atl, Phase_vector* k, int kn, double st
 		{
 			i++;
 			dist = distance(a, &(tmp->body));
-			res.v_x = res.v_x + (G *  tmp->body.Mass * (tmp->body.x - ((a -> x) + step * (k_tmp.x))) )/(dist * dist * dist);
-			res.v_y = res.v_y + (G *  tmp->body.Mass * (tmp->body.y - ((a -> y) + step * (k_tmp.y))))/(dist * dist * dist);
+			res.v_x = res.v_x + (G *  tmp->body.Mass * (tmp->body.x - ((a -> x) + (k_tmp.x))) )/(dist * dist * dist);
+			res.v_y = res.v_y + (G *  tmp->body.Mass * (tmp->body.y - ((a -> y) + (k_tmp.y))))/(dist * dist * dist);
 		}
 		tmp = tmp->next;
 	}	
