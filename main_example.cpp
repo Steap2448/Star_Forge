@@ -38,30 +38,28 @@ int main()
 	atl.add(&Mars);	
 	atl.add(&Mercury);
 	atl.add(&Venus);
+	Phase_space* attr = attr_creator(&atl);
 	atl.add(&Moon);
-	Phase_space k(atl.amount);
-	Phase_space* attr = new Phase_space[11];
-	for(int i = 0; i <= 10; i++) 
-	{
-		attr[i].amount = atl.amount;
-		attr[i].object = new Phase_vector[attr[i].amount];
-		attr[i].mass = new double[attr[i].amount];
-	}
-	k.load(&atl);
+	attr_add(attr, &Moon);
 	Pthread_base pth = Pthread_base(5, &atl);
-	while (window.isOpen()) 
+	int l = 2;
+	while (window.isOpen()&&(l != 0)) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
 		clock.restart(); //перезагружает время
 		pthread_mutex_init(&m, NULL);
 		time = T_SCALE * time;
+		//l--;
 		//argument.scale = WIDTH;
 		//argument.step = time;
 		//argument.t_scale = time;
 		//Motion_paral_mod(&argument);
 		//Motion_paral(&atl, &pth, time, time);
 		//Motion(&atl, time, time, WIDTH);
-		Motion(&k, &atl, time, 0.1 * time, WIDTH, 0.01e-19, attr);
+		//k.out();
+		//k.out();
+		Motion(&atl, time, 0.01 * time, WIDTH, 0.01e-19, attr);
+		//k.out();
     	//pth.launch(time, time, WIDTH);
 		//atl.move(WIDTH);
 		Event event;

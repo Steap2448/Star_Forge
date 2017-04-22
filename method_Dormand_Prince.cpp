@@ -4,81 +4,117 @@
 
 void Phase_space::operator +=(Phase_space a)
 {
-	for (int i = 0; i < amount; i ++)
+	if (amount != a.amount) return;
+	Phase_space_node tmp1 = first, tmp2 = a.first;
+	while(tmp2 != NULL)
 	{
-		if (a.amount != amount) return;
-		object[i].x += a.object[i].x;
-		object[i].y += a.object[i].y;
-		object[i].v_x += a.object[i].v_x;
-		object[i].v_y += a.object[i].v_y;
+		tmp1->body.x += tmp2->body.x;
+		tmp1->body.y += tmp2->body.y;
+		tmp1->body.v_x += tmp2->body.v_x;
+		tmp1->body.v_y += tmp2->body.v_y;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
 	} 
 	return;
 }
 void Phase_space::operator -=(Phase_space a)
 {
-	if (a.amount != amount) return;
-	for (int i = 0; i < amount; i ++)
+	if (amount != a.amount) return;
+	Phase_space_node tmp1 = first, tmp2 = a.first;
+	while(tmp2 != NULL)
 	{
-		object[i].x -= a.object[i].x;
-		object[i].y -= a.object[i].y;
-		object[i].v_x -= a.object[i].v_x;
-		object[i].v_y -= a.object[i].v_y;
+		tmp1->body.x -= tmp2->body.x;
+		tmp1->body.y -= tmp2->body.y;
+		tmp1->body.v_x -= tmp2->body.v_x;
+		tmp1->body.v_y -= tmp2->body.v_y;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
 	}	
 	return;
 }
 
 Phase_space Phase_space::operator +(Phase_space a)
 {
-	if (a.amount != amount) return Phase_space();
-	Phase_space res = Phase_space(a.amount);
-	for (int i = 0; i < amount; i ++)
-		{
-			res.object[i].x = object[i].x + a.object[i].x;
-			res.object[i].y = object[i].y + a.object[i].y;
-			res.object[i].v_x = object[i].v_x + a.object[i].v_x;
-			res.object[i].v_y = object[i].v_y + a.object[i].v_y;
-			res.mass[i] = a.mass[i];
-		}
+	if (amount != a.amount) return Phase_space();
+	Phase_space res = Phase_space(amount);
+	Phase_space_node tmp1 = first, tmp2 = a.first, tmp = res.first;
+	while(tmp2 != NULL)
+	{
+		tmp->body.x = tmp1->body.x + tmp2->body.x;
+		tmp->body.y = tmp1->body.y + tmp2->body.y;
+		tmp->body.v_x = tmp1->body.v_x + tmp2->body.v_x;
+		tmp->body.v_y = tmp1->body.v_y + tmp2->body.v_y;
+		tmp-> mass = tmp1->mass;
+		tmp = tmp -> next;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
+	}
 	return res;
 }
 
 Phase_space Phase_space::operator -(Phase_space a)
 {
-	if (a.amount != amount) return Phase_space();
-	Phase_space res = Phase_space(a.amount);
-	for (int i = 0; i < amount; i ++)
-		{
-			res.object[i].x = object[i].x - a.object[i].x;
-			res.object[i].y = object[i].y - a.object[i].y;
-			res.object[i].v_x = object[i].v_x - a.object[i].v_x;
-			res.object[i].v_y = object[i].v_y - a.object[i].v_y;
-			res.mass[i] = a.mass[i];
-		}
+	if (amount != a.amount) return Phase_space();
+	Phase_space res = Phase_space(amount);
+	Phase_space_node tmp1 = first, tmp2 = a.first, tmp = res.first;
+	while(tmp2 != NULL)
+	{
+		tmp->body.x = tmp1->body.x - tmp2->body.x;
+		tmp->body.y = tmp1->body.y - tmp2->body.y;
+		tmp->body.v_x = tmp1->body.v_x - tmp2->body.v_x;
+		tmp->body.v_y = tmp1->body.v_y - tmp2->body.v_y;
+		tmp-> mass = tmp1->mass;
+		tmp = tmp -> next;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
+	}
 	return res;
 }
 
 void Phase_space::operator *=(double a)
 {
-	for (int i = 0; i < amount; i ++)
+	Phase_space_node tmp1 = first;
+	while(tmp1 != NULL)
 	{
-		object[i].x *= a;
-		object[i].y *= a;
-		object[i].v_x *= a;
-		object[i].v_y *= a;
-	}	
+		tmp1->body.x *= a;
+		tmp1->body.y *= a;
+		tmp1->body.v_x *= a;
+		tmp1->body.v_y *= a;
+		tmp1 = tmp1 -> next;
+	}
 	return;
 }
 
 void Phase_space::operator =(Phase_space a)
 {
 	if (a.amount != amount) return;
-	for (int i = 0; i < amount; i ++)
+	Phase_space_node tmp1 = first, tmp2 = a.first;
+	while(tmp2 != NULL)
 	{
-		object[i].x = a.object[i].x;
-		object[i].y = a.object[i].y;
-		object[i].v_x = a.object[i].v_x;
-		object[i].v_y = a.object[i].v_y;
-		mass[i] = a.mass[i];
+		tmp1->body.x = tmp2->body.x;
+		tmp1->body.y = tmp2->body.y;
+		tmp1->body.v_x = tmp2->body.v_x;
+		tmp1->body.v_y = tmp2->body.v_y;
+		tmp1->mass = tmp2->mass;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
+	}
+	return;
+}
+
+void Phase_space::operator =(Phase_space* a)
+{
+	if (a->amount != amount) return;
+	Phase_space_node tmp1 = first, tmp2 = a->first;
+	while(tmp2 != NULL)
+	{
+		tmp1->body.x = tmp2->body.x;
+		tmp1->body.y = tmp2->body.y;
+		tmp1->body.v_x = tmp2->body.v_x;
+		tmp1->body.v_y = tmp2->body.v_y;
+		tmp1->mass = tmp2->mass;
+		tmp1 = tmp1 -> next;
+		tmp2 = tmp2 -> next;
 	}
 	return;
 }
@@ -86,30 +122,34 @@ void Phase_space::operator =(Phase_space a)
 Phase_space Phase_space::operator *(double a)
 {
 	Phase_space res = Phase_space(amount);
-	res.amount = amount;
-	for (int i = 0; i < amount; i ++)
-		{
-			res.object[i].x = object[i].x * a;
-			res.object[i].y = object[i].y * a;
-			res.object[i].v_x = object[i].v_x * a;
-			res.object[i].v_y = object[i].v_y * a;
-			res.mass[i] = mass[i];
-		}
+	Phase_space_node tmp1 = first, tmp = res.first;
+	while(tmp1 != NULL)
+	{
+		tmp->body.x = tmp1->body.x * a;
+		tmp->body.y = tmp1->body.y * a;
+		tmp->body.v_x = tmp1->body.v_x * a;
+		tmp->body.v_y = tmp1->body.v_y * a;
+		tmp-> mass = tmp1->mass;
+		tmp = tmp -> next;
+		tmp1 = tmp1 -> next;
+	}
 	return res;
 	
 }
 Phase_space Phase_space::operator /(double a)
 {
 	Phase_space res = Phase_space(amount);
-	res.amount = amount;
-	for (int i = 0; i < amount; i ++)
-		{
-			res.object[i].x = object[i].x / a;
-			res.object[i].y = object[i].y / a;
-			res.object[i].v_x = object[i].v_x / a;
-			res.object[i].v_y = object[i].v_y / a;
-			res.mass[i] = mass[i];
-		}
+	Phase_space_node tmp1 = first, tmp = res.first;
+	while(tmp1 != NULL)
+	{
+		tmp->body.x = tmp1->body.x / a;
+		tmp->body.y = tmp1->body.y / a;
+		tmp->body.v_x = tmp1->body.v_x / a;
+		tmp->body.v_y = tmp1->body.v_y / a;
+		tmp-> mass = tmp1->mass;
+		tmp = tmp -> next;
+		tmp1 = tmp1 -> next;
+	}
 	return res;
 }/*
 //In case the first method.hpp won`t be used
@@ -161,124 +201,163 @@ double distance(double x1, double y1, double x2, double y2)
 Phase_space* f(Phase_space k, Phase_space* res)
 {
 	double dist;
-	for (int i = 0; i < k.amount; i ++)
+	Phase_space_node tmp1 = k.first, tmp2 = k.first;
+	Phase_space_node tmp = res->first;
+	while (tmp1 != NULL)
 		{
-			res->object[i].x = k.object[i].v_x;
-			res->object[i].y = k.object[i].v_y;
-			res->object[i].v_x = 0;
-			res->object[i].v_y = 0;
-			res->mass[i] = k.mass[i];
+			tmp->body.x = tmp1->body.v_x;
+			tmp->body.y = tmp1->body.v_y;
+			tmp->body.v_x = 0;
+			tmp->body.v_y = 0;
+			tmp->mass = tmp1->mass;
+			tmp = tmp -> next;
+			tmp1 = tmp1 -> next;
 		}
-	int i = 0, j = 0;
-	for(i = 0; i < k.amount; i ++)
+	tmp1 = k.first;
+	tmp = res->first;
+	while (tmp1 != NULL)
 	{
-		for(j = 0; j < k.amount; j++)
+		while (tmp2 != NULL)
 		{
-			if (j != i)
+			if ((tmp1) != (tmp2))
 			{
-				dist = distance(k.object[i].x, k.object[i].y, k.object[j].x, k.object[j].y);
-				res->object[i].v_x += (G * k.mass[j] *(k.object[j].x - k.object[i].x)/(dist * dist * dist)) ;
-				res->object[i].v_y += (G * k.mass[j] *(k.object[j].y - k.object[i].y)/(dist * dist * dist)) ;
+				dist = distance(tmp1->body.x, tmp1->body.y, tmp2->body.x, tmp2->body.y);
+				tmp->body.v_x += (G * tmp2->mass *(tmp2->body.x - tmp1->body.x)/(dist * dist * dist)) ;
+				tmp->body.v_y += (G * tmp2->mass *(tmp2->body.y - tmp1->body.y)/(dist * dist * dist)) ;
+				tmp2 = tmp2 -> next;
 			}
+			else tmp2 = tmp2 -> next;
 		}
+		tmp1 = tmp1 -> next;
+		tmp = tmp -> next;
+		tmp2 = k.first;
 	}
 	return res;
 }
 
-Phase_space* k1(Phase_space k, Phase_space* res_v)
-{
-	return f(k, res_v);
-}
-
-Phase_space* k2(Phase_space k, Phase_space k1, Phase_space* res_v)
-{
-	return f(k + k1/5, res_v);
-}
-
-Phase_space* k3(Phase_space k, Phase_space k1, Phase_space k2, Phase_space* res_v)
-{
-	return f(k + (k1 * 3/40) + (k2 * 9/40), res_v);
-}
-
-Phase_space* k4(Phase_space k, Phase_space k1, Phase_space k2, Phase_space k3, Phase_space* res_v)
-{
-	return f(k+(k1 * 44/45)+(k2 * -56/15)+(k3 * 32/9), res_v);
-}
-
-Phase_space* k5(Phase_space k, Phase_space k1, Phase_space k2, Phase_space k3, Phase_space k4, Phase_space* res_v)
-{
-	return f(k+(k1 * 19372/6561)+(k2 * -25360/2187)+(k3 * 64448/6561)+(k4 * -212/729), res_v);
-}
-
-Phase_space* k6(Phase_space k, Phase_space k1, Phase_space k2, Phase_space k3, Phase_space k4, Phase_space k5, Phase_space* res_v)
-{
-	return f(k+(k1 * 9017/3168)+(k2 * -355/33)+(k3 * -46732/5247)+(k4 * 49/176)+(k5 * -5103/18656), res_v);
-}
-
-Phase_space* k7(Phase_space k, Phase_space k1, Phase_space k3, Phase_space k4, Phase_space k5, Phase_space k6, Phase_space* res_v)
-{
-	return f(k+(k1 * 35/384)+(k3 * 500/1113)+(k4 * 125/192)+(k5 * -2187/6784)+(k6 * 11/84), res_v);
-}
-
 double error(Phase_space k)
 {
-	double res = 0, err = 0;
+	double res = 0, err1 = 0, err2 = 0, err;
 	int i = 0;
-	for(i = 0; i < k.amount; i ++)
+	Phase_space_node tmp = k.first;
+	while(tmp != NULL)
 	{
-		if (abs(k.object[i].x) > err) err = abs(k.object[i].x);
+		if (tmp->body.x > err1) err1 = tmp->body.x;
+		if (tmp->body.y > err2) err2 = tmp->body.y;
+		tmp = tmp -> next;
 	}
-	for(i = 0; i < k.amount; i ++)
-	{
-		if (abs(k.object[i].y) > err) err = abs(k.object[i].y);
-	}
-	for(i = 0; i < k.amount; i ++)
-	{
-		if (abs(k.object[i].v_x) > err) err = abs(k.object[i].v_x);
-	}
-	for(i = 0; i < k.amount; i ++)
-	{
-		if (abs(k.object[i].v_y) > err) err = abs(k.object[i].v_y);
-	}
+	if (err1 > err2) err = err1;
+	else err = err2;
 	return err;
 }
 
-Phase_space* Motion(Phase_space* k_a, Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr)
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr)
 {
 	double time = step, step_ad = step, err, s;
 	int i;
-	attr[0] = *k_a;
+	Phase_space_node tmp1, tmp2;
 	while(time < t_scale)
 	{
-		k1(attr[0], &(attr[1]));
-		k2(attr[0], attr[1], &(attr[2]));
-		k3(attr[0], attr[1], attr[2], &(attr[3]));
-		k4(attr[0], attr[1], attr[2], attr[3], &(attr[4]));
-		k5(attr[0], attr[1], attr[2], attr[3], attr[4], &(attr[5]));
-		k6(attr[0], attr[1], attr[2], attr[3], attr[4], attr[5], &(attr[6]));
-		k7(attr[0], attr[1], attr[3], attr[4], attr[5], attr[6], &(attr[7]));
+		f(attr[0], &(attr[1]));
+		f(attr[0] + attr[1] * b[1][0], &(attr[2]));
+		f(attr[0] + attr[1] * b[2][0] + attr[2] * b[2][1], &(attr[3]));
+		f(attr[0] + attr[1] * b[3][0] + attr[2] * b[3][1] + attr[3] * b[3][2], &(attr[4]));
+		f(attr[0] + attr[1] * b[4][0] + attr[2] * b[4][1] + attr[3] * b[4][2] + attr[4] * b[4][3], &(attr[5]));
+		f(attr[0] + attr[1] * b[5][0] + attr[2] * b[5][1] + attr[3] * b[5][2] + attr[4] * b[5][3] + attr[5] * b[5][4], &(attr[6]));
+		f(attr[0] + attr[1] * b[6][0] + attr[3] * b[6][2] + attr[4] * b[6][3] + attr[5] * b[6][4] + attr[6] * b[6][5], &(attr[7]));
 		for(i = 1; i <= 7; i++) attr[i] *= step_ad;
-		attr[8] = ((attr[1] * 35/384)+(attr[3] * 50/1113)+(attr[4] * 125/192)+(attr[5] * -2187/6784)+(attr[6] * 11/84));
-		attr[9] = ((attr[1] * 5179/57600)+(attr[3] * 7571/16695)+(attr[4] * 393/640)+(attr[5] * -92097/339200)+(attr[6] * 187/2100)+(attr[7] * 1/40));
+		attr[8] = attr[1] * b[7][0] + attr[3] * b[7][2] + attr[4] * b[7][3] + attr[5] * b[7][4] + attr[6] * b[7][5] + attr[7] * b[7][6];
+		attr[9] = attr[1] * b[8][0] + attr[3] * b[8][2] + attr[4] * b[8][3] + attr[5] * b[8][4] + attr[6] * b[8][5] + attr[7] * b[8][6];
 		err = error(attr[8] - attr[9]);
 		s = pow(mistake * step/(2*1), 0.2);
 		attr[0] += attr[8];
 		time += step_ad;
-		for (int i = 0; i < k_a->amount; i ++)
-		{
-			k_a -> object[i].x = attr[0].object[i].x;
-			k_a -> object[i].y = attr[0].object[i].y;
-			k_a -> object[i].v_x = attr[0].object[i].v_x;
-			k_a -> object[i].v_y = attr[0].object[i].v_y;
-			k_a->mass[i] = attr[0].mass[i];
-		}
 		if (step_ad * s > step) step_ad = step;
 		else if (step_ad * s < step * 0.0001) step_ad = step * 0.0001;
 		
 	}
 	attr[0].save(atl, scale);
 	
-	return k_a;
+	return &attr[0];
+}
+
+Phase_space* attr_creator(Atlas* atl)
+{
+	int j = 0;
+	Phase_space_node tmp;
+	Phase_space* attr = new Phase_space[10];
+	
+	int i = 0;
+	Atlas_node tmp2 = atl->first;
+	attr[0].amount = 0;
+	while(tmp2 != NULL)
+	{
+		if (attr[0].amount == 0)
+		{
+			attr[0].first = new Phase_space_node_el;
+			attr[0].first -> body = Phase_vector(tmp2->body.x, tmp2->body.y, tmp2->body.v_x, tmp2->body.v_y);
+			attr[0].first -> next = NULL;
+			attr[0].first -> mass = tmp2->body.Mass;
+			tmp = attr[0].first;
+			attr[0].first -> order = i;
+			tmp2 = tmp2 -> next;
+			attr[0].amount++;
+			i++;
+		}
+		else
+		{
+			tmp -> next = new Phase_space_node_el;
+			tmp = tmp -> next;
+			tmp -> body = Phase_vector(tmp2->body.x, tmp2->body.y, tmp2->body.v_x, tmp2->body.v_y);
+			tmp -> mass = tmp2->body.Mass;
+			tmp -> next = NULL;
+			tmp2 = tmp2 -> next;
+			tmp -> order = i;
+			attr[0].amount ++;
+			i++;
+			}
+	}
+	
+	for(int i = 1; i < 10; i ++)
+	{
+		attr[i].amount = 0;
+		while(attr[i].amount != atl-> amount)
+		{
+			if (attr[i].amount == 0)
+			{
+				attr[i].first = new Phase_space_node_el;
+				attr[i].first -> body = Phase_vector();
+				attr[i].first -> next = NULL;
+				attr[i].first -> mass = 0;
+				attr[i].first -> order = j;
+				tmp = attr[i].first;
+				attr[i].amount ++;
+				j++;
+			}
+			else
+			{
+				tmp -> next = new Phase_space_node_el;
+				tmp = tmp -> next;
+				tmp -> body = Phase_vector();
+				tmp -> mass = 0;
+				tmp -> next = NULL;
+				tmp -> order = j;
+				attr[i].amount ++;
+				j++;
+			}
+		}
+	}
+	return attr;
+}
+
+Phase_space* attr_add(Phase_space* attr, Celestial_Body* a)
+{
+	attr[0].add(a);
+	for (int i = 1; i < 10; i ++)
+	{
+		attr[i].add();
+	}
+	return attr;
 }
 
 
