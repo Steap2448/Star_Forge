@@ -14,5 +14,8 @@
     * No tests yet
     * Integration 
 4. Milestones
+    * 20.4.17 -- Added load, save and directory preview functions
+    * 21.4.17 -- Added Dormand-Prince method, expand
+    * 21.4.17 -- Optimized Phase_space structure
     * 25.4.17 -- SDP created
     
