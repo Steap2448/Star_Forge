@@ -2,7 +2,7 @@
 
 1. Description
     * A university project that allows its user to create, save and load star systems. 
-    * 
+    * Numerical method for ordinary differential equations, Cauchy problem, star system simulation, graphics, file operations.
 2. Design
     * Initial thoughts in UML (a work in progress)
     * Limitations - work in progess
