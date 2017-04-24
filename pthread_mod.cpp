@@ -90,7 +90,8 @@ Pthread_base::Pthread_base()
 
 Pthread_base::Pthread_base(int a, Atlas* atl)
 {
-	amount = a;
+	if (a > atl -> amount) amount = atl -> amount;
+	else amount = a;
 	thread = new pthread_t[amount];
 	current = 0;
 	argument = new arg_mod[amount];
