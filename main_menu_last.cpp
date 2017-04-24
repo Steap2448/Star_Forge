@@ -45,7 +45,7 @@ int main()
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = T_SCALE * time;	
-		atl.move(WIDTH);
+		//atl.move(WIDTH);
 		p=Mouse::getPosition(window);
 		shape->setPosition(p.x,p.y);
 		Event event;

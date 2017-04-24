@@ -230,6 +230,42 @@ int Celestial_Body::operator !=(Celestial_Body a)
 
 //Atlas section
 
+double x(double x_m, double scale)
+{
+	double res = (x_m * (scale))/(6.084e11) + scale/2;
+	return res;
+}
+
+double y(double y_m, double scale)
+{
+	double res = scale/2 - (y_m * scale)/(6.084e11);
+	return res;
+}
+
+double x_satellite(double x, Celestial_Body* a)
+{
+	double res = x + a->x;
+	return res;
+}
+
+double y_satellite(double y, Celestial_Body* a)
+{
+	double res = y + a->y;
+	return res;
+}
+
+double v_x_satellite(double v_x, Celestial_Body* a)
+{
+	double res = v_x + a->v_x;
+	return res;
+}
+
+double v_y_satellite(double v_y, Celestial_Body* a)
+{
+	double res = v_y + a->v_y;
+	return res;
+}
+
 Atlas::Atlas()
 {
 	first = NULL;
@@ -340,6 +376,16 @@ void Atlas::out()
 	return;
 }
 
+void draw(Atlas* atl, sf::RenderWindow* window)
+{
+	Atlas_node tmp = atl->first;
+	while(tmp != NULL)
+	{
+		window->draw(tmp->avatar);
+		tmp = tmp->next;
+	}	
+	return;
+}
 
 
 

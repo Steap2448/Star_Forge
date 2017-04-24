@@ -426,7 +426,6 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
-		pthread_mutex_init(&m, NULL);
 		time = T_SCALE * time;	
 		p=Mouse::getPosition(*window);
 		shape->setPosition(p.x,p.y);
@@ -498,7 +497,6 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 	}
 	block.destroy();
 	atl.del();
-	pthread_mutex_destroy(&m);
 	list_ptr.destroy();
 	t10.destroy();
 	delete[] attr;

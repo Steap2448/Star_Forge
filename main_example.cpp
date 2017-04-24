@@ -41,13 +41,11 @@ int main()
 	Phase_space* attr = attr_creator(&atl);
 	atl.add(&Moon);
 	attr_add(attr, &Moon);
-	Pthread_base pth = Pthread_base(5, &atl);
 	int l = 2;
 	while (window.isOpen()&&(l != 0)) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
 		clock.restart(); //перезагружает время
-		pthread_mutex_init(&m, NULL);
 		time = T_SCALE * time;
 		//l--;
 		//argument.scale = WIDTH;
@@ -58,7 +56,7 @@ int main()
 		//Motion(&atl, time, time, WIDTH);
 		//k.out();
 		//k.out();
-		Motion(&atl, time, 0.01 * time, WIDTH, 0.01e-19, attr);
+		Motion(&atl, time, 0.01 * time, WIDTH, attr);
 		//k.out();
     	//pth.launch(time, time, WIDTH);
 		//atl.move(WIDTH);
@@ -73,8 +71,6 @@ int main()
 		window.display();
 	}
 	atl.del();
-	pth.del();
 	delete[] attr;
-	pthread_mutex_destroy(&m);
 	return 0;
 }

@@ -253,18 +253,6 @@ class Phase_space
 		delete mass;
 	}*/
 };
-//In case the first method.hpp won`t be used
-/*double x(double x_m, double scale);
-
-double y(double y_m, double scale);
-
-double x_satellite(double x, Celestial_Body* a);
-
-double y_satellite(double y, Celestial_Body* a);
-
-double v_x_satellite(double v_x, Celestial_Body* a);
-
-double v_y_satellite(double v_y, Celestial_Body* a);*/
 
 double distance(double x1, double y1, double x2, double y2);
 
