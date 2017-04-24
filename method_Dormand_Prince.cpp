@@ -1,4 +1,4 @@
-#define G 6.67408e-11
+#define Gi 6.67408e-11
 
 #include "method_Dormand_Prince.hpp"
 
@@ -222,8 +222,8 @@ Phase_space* f(Phase_space k, Phase_space* res)
 			if ((tmp1) != (tmp2))
 			{
 				dist = distance(tmp1->body.x, tmp1->body.y, tmp2->body.x, tmp2->body.y);
-				tmp->body.v_x += (G * tmp2->mass *(tmp2->body.x - tmp1->body.x)/(dist * dist * dist)) ;
-				tmp->body.v_y += (G * tmp2->mass *(tmp2->body.y - tmp1->body.y)/(dist * dist * dist)) ;
+				tmp->body.v_x += (Gi * tmp2->mass *(tmp2->body.x - tmp1->body.x)/(dist * dist * dist)) ;
+				tmp->body.v_y += (Gi * tmp2->mass *(tmp2->body.y - tmp1->body.y)/(dist * dist * dist)) ;
 				tmp2 = tmp2 -> next;
 			}
 			else tmp2 = tmp2 -> next;
@@ -254,6 +254,11 @@ double error(Phase_space k)
 Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr)
 {
 	double time = step, step_ad = step, err, s;
+	if (atl-> amount <= 1) 
+	{
+		if (atl -> amount == 1) attr[0].save(atl, scale);
+		return &attr[0];
+	}
 	int i;
 	Phase_space_node tmp1, tmp2;
 	while(time < t_scale)
@@ -286,6 +291,39 @@ Phase_space* attr_creator(Atlas* atl)
 	int j = 0;
 	Phase_space_node tmp;
 	Phase_space* attr = new Phase_space[10];
+	if (atl->amount == 0)
+	{
+		for(int i = 0; i < 10; i ++)
+		{
+			attr[i].amount = 0;
+			while(attr[i].amount != atl-> amount)
+			{
+				if (attr[i].amount == 0)
+				{
+					attr[i].first = new Phase_space_node_el;
+					attr[i].first -> body = Phase_vector();
+					attr[i].first -> next = NULL;
+					attr[i].first -> mass = 0;
+					attr[i].first -> order = j;
+					tmp = attr[i].first;
+					attr[i].amount ++;
+					j++;
+				}
+				else
+				{
+					tmp -> next = new Phase_space_node_el;
+					tmp = tmp -> next;
+					tmp -> body = Phase_vector();
+					tmp -> mass = 0;
+					tmp -> next = NULL;
+					tmp -> order = j;
+					attr[i].amount ++;
+					j++;
+				}
+			}
+		}
+		return attr;
+	}
 	
 	int i = 0;
 	Atlas_node tmp2 = atl->first;

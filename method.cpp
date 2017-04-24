@@ -1,4 +1,4 @@
-#define G 6.67408e-11
+#define Gi 6.67408e-11
 
 #include "method.hpp"
 
@@ -65,8 +65,8 @@ Phase_vector f(Celestial_Body* a, Atlas* atl, Phase_vector* k, int kn, double st
 		{
 			i++;
 			dist = distance(a, &(tmp->body));
-			res.v_x = res.v_x + (G *  tmp->body.Mass * (tmp->body.x - ((a -> x) + (k_tmp.x))) )/(dist * dist * dist);
-			res.v_y = res.v_y + (G *  tmp->body.Mass * (tmp->body.y - ((a -> y) + (k_tmp.y))))/(dist * dist * dist);
+			res.v_x = res.v_x + (Gi *  tmp->body.Mass * (tmp->body.x - ((a -> x) + (k_tmp.x))) )/(dist * dist * dist);
+			res.v_y = res.v_y + (Gi *  tmp->body.Mass * (tmp->body.y - ((a -> y) + (k_tmp.y))))/(dist * dist * dist);
 		}
 		tmp = tmp->next;
 	}	
@@ -87,8 +87,8 @@ Phase_vector f(Celestial_Body* a, Atlas* atl)
 		if(!((a->x == (tmp -> body.x))&&(a->y == (tmp -> body.y))))
 		{
 			dist = distance(a, &(tmp->body));
-			res.v_x = res.v_x + (G *  tmp->body.Mass * (tmp->body.x - (a -> x)) )/(dist * dist * dist);
-			res.v_y = res.v_y + (G *  tmp->body.Mass * (tmp->body.y - (a -> y)))/(dist * dist * dist);
+			res.v_x = res.v_x + (Gi *  tmp->body.Mass * (tmp->body.x - (a -> x)) )/(dist * dist * dist);
+			res.v_y = res.v_y + (Gi *  tmp->body.Mass * (tmp->body.y - (a -> y)))/(dist * dist * dist);
 		}
 		tmp = tmp->next;
 	}	

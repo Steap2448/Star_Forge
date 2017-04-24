@@ -93,12 +93,13 @@ class Celestial_Body: public Phase_vector
 	double Mass;
 	Phase_vector mov;
 	std::string texture_path;
+	std::string body_name;
 	sf::Color color;
-	sf::Texture texture;
+	sf::Texture t;
 	Celestial_Body();
 	Celestial_Body(const Celestial_Body& other);
 	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k); 
-	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k, std::string t);
+	Celestial_Body(double a, double b, double c, double d, double e, double f, double g, double k, std::string t,std::string name);
 	Celestial_Body operator =(Celestial_Body a);
 	Celestial_Body operator =(Celestial_Body* a);
 	Celestial_Body operator +(Phase_vector a);
@@ -123,14 +124,15 @@ typedef struct _Atlas_node
 class Atlas
 {
 	public:
-	const char* name;
+	std::string name;
 	Atlas_node first;
 	Atlas_node last;
+	Atlas_node active;
 	int amount;
 	Atlas();
 	Atlas(Celestial_Body a);
 	void add(Celestial_Body* a);
-	//void remove(Celestial_Body a);
+	void remove();
 	void del();
 	void draw(sf::RenderWindow window);
 	void move(double scale);

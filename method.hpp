@@ -5,6 +5,14 @@ double x(double x_m, double scale);
 
 double y(double y_m, double scale);
 
+double x_satellite(double x, Celestial_Body* a);
+
+double y_satellite(double y, Celestial_Body* a);
+
+double v_x_satellite(double v_x, Celestial_Body* a);
+
+double v_y_satellite(double v_y, Celestial_Body* a);
+
 double distance(Celestial_Body* a, Celestial_Body* b);
 
 Phase_vector f(Celestial_Body* a, Atlas* atl, Phase_vector* k, int kn, double step);

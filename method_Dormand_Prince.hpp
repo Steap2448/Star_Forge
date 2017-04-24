@@ -35,6 +35,11 @@ class Phase_space
 	{
 		amount = 0;
 		int i = 0;
+		if (a == 0) 
+		{
+			*this = Phase_space();
+			return;
+		}
 		Phase_space_node tmp;
 		while(amount != a)
 		{
@@ -65,6 +70,11 @@ class Phase_space
 	
 	Phase_space(Atlas* atl)
 	{
+		if (atl->amount == 0)
+		{
+			*this = Phase_space();
+			return;
+		}
 		int i = 0;
 		Phase_space_node tmp;
 		Atlas_node tmp2 = atl->first;
@@ -100,6 +110,11 @@ class Phase_space
 	
 	Phase_space(const Phase_space& other)
 	{
+		if (other.amount == 0)
+		{
+			*this = Phase_space();
+			return;
+		}
 		Phase_space_node tmp, tmp2 = other.first;
 		amount = 0;
 		while(tmp2 != NULL)
@@ -160,6 +175,17 @@ class Phase_space
 	void add(Celestial_Body* a)
 	{
 		Phase_space_node tmp = first;
+		if (tmp == NULL)
+		{
+			tmp = new Phase_space_node_el;
+			tmp -> body = Phase_vector(a->x, a->y, a->v_x, a->v_y);
+			tmp -> next = NULL;
+			tmp -> mass = a->Mass;
+			tmp -> order = 0;
+			first = tmp;
+			amount = 1;
+			return;
+		}
 		while (tmp -> next != NULL) tmp = tmp -> next;
 		int i = tmp -> order;
 		tmp -> next = new Phase_space_node_el;
@@ -169,12 +195,23 @@ class Phase_space
 		tmp -> mass = a->Mass;
 		tmp -> order = (i+1);
 		amount++;
-		
+		return;
 	}
 	
 	void add()
 	{
 		Phase_space_node tmp = first;
+		if (tmp == NULL)
+		{
+			tmp = new Phase_space_node_el;
+			tmp -> body = Phase_vector();
+			tmp -> next = NULL;
+			tmp -> mass = 0;
+			tmp -> order = 0;
+			amount = 1;
+			first = tmp;
+			return;
+		}
 		while (tmp -> next != NULL) tmp = tmp -> next;
 		int i = tmp -> order;
 		tmp -> next = new Phase_space_node_el;
@@ -184,6 +221,7 @@ class Phase_space
 		tmp -> mass = 0;
 		tmp -> order = (i+1);
 		amount++;
+		return;
 	}
 	
 	
