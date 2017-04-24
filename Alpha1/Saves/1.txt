@@ -1,0 +1,3 @@
+2 
+662584 522081 0.0790701 0.12654 0 0 20 1.9885e+30 255 system_files/object_textures/sun.png SUN 
+-6.84985e+10 1.40127e+11 -26325.4 -12346.8 0 0 7 5.9726e+24 255 system_files/object_textures/earth.png EARTH 
