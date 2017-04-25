@@ -1,2 +1,0 @@
-1 
-1.23e+11 0 0 0 0 0 123 123 255 system_files/object_textures/earth.png SDA 

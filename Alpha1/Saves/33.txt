@@ -1,2 +1,0 @@
-1 
-22 22 0 0 0 0 22 22 255 system_files/object_textures/earth.png 12 
