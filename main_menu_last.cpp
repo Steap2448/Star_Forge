@@ -1,11 +1,6 @@
 #include "general.hpp"
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "input_last.cpp"
 #define T_SCALE 1
 float k=WIDTH/1080.0;
-
-using namespace sf;
 
 int main()
 {
@@ -21,10 +16,12 @@ int main()
 	furi.openFromFile("furi.ogg");
 	furi.play();
 	Texture t[4];
-	Texture t9;
+	Texture t9,t10;
 	t9.loadFromFile(PULL[8]);
-	RectangleShape title(Vector2f(700*k,200*k)),background(Vector2f(1000*k,1080*k));
+	t10.loadFromFile("system_files/bg.png");
+	RectangleShape title(Vector2f(700*k,200*k)),background(Vector2f(1000*k,1080*k)),background2(Vector2f(1920*k,1080*k));
 	title.setTexture(&t9);
+	background2.setTexture(&t10);
 	Atlas atl;
 	Clock clock;
 	RenderWindow window(VideoMode(1920*k,WIDTH),"Star Forge"/*,Style::Fullscreen*/);
@@ -40,17 +37,25 @@ int main()
 	window.setKeyRepeatEnabled (false);
 	furi.setLoop(true);
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом(Alex: done)
+	sl.scroll(0);
 	while (window.isOpen()) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = T_SCALE * time;	
-		//atl.move(WIDTH);
 		p=Mouse::getPosition(window);
 		shape->setPosition(p.x,p.y);
 		Event event;
 		while (window.pollEvent(event))
 		{
+			if((event.type == Event::KeyPressed && event.key.code == Keyboard::Up)&&(cl.mode==1))
+			{
+				sl.scroll(1);
+			}
+			if((event.type == Event::KeyPressed && event.key.code == Keyboard::Down)&&(cl.mode==1))
+			{
+				sl.scroll(-1);
+			}
 			if(event.type == Event::MouseButtonPressed)
 			{
 				if (event.mouseButton.button == Mouse::Left&&(cl.mode!=-1)&&(p.x>(LENGTH-110)*k))
@@ -68,7 +73,7 @@ int main()
 					if(New.mode==0) 
 					{
 						Atlas atl;
-						work(&window,shape,k,atl);
+						work(&window,shape,background2,k,atl);
 						clock.restart();
 					}
 				}		
@@ -80,7 +85,7 @@ int main()
 					{
 						Atlas atl;
 						load_system (sl.load.substr(6),&atl);
-						work(&window,shape,k,atl);
+						work(&window,shape,background2,k,atl);
 						sl.load="_";
 						clock.restart();
 					}
@@ -114,6 +119,7 @@ int main()
 			}
 		}
 		window.clear();
+		window.draw(background2);
 		draw(&atl, &window);
 		if(cl.mode==0) 
 		{

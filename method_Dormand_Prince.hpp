@@ -224,6 +224,23 @@ class Phase_space
 		return;
 	}
 	
+	void remove()
+	{
+		Phase_space_node tmp = first;
+		if (tmp == NULL) return;
+		if (tmp -> next == NULL)
+		{
+			delete tmp;
+			first = NULL;
+			amount = 0;
+			return;
+		}
+		while (tmp -> next -> next != NULL) tmp = tmp -> next;
+		delete tmp -> next;
+		tmp -> next = NULL;
+		amount--;
+		return;
+	}
 	
 	~Phase_space()
 	{

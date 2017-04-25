@@ -1,8 +1,3 @@
-#include <iostream>
-#include "celestial_body.hpp"
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <cmath>
 #include "interface_last.cpp"
 using namespace sf;
 std::string l = ".";
@@ -70,6 +65,10 @@ class title
 	void update()
 	{
 		name_t.setString(name);
+	}
+		void reset()
+	{
+		name = "";
 	}
 };
 
@@ -190,6 +189,11 @@ class msBox
 			}
 		}
 	}
+	void reset()
+	{
+		string1 = "";
+		string2 = "";
+	}
 };
 
 class data
@@ -267,6 +271,15 @@ class data
 		while (current!=NULL)
 		{
 			current->last_update();
+			current=current->next;
+		}
+	}
+	void reset()
+	{
+		msBox* current = first;
+		while (current!=NULL)
+		{
+			current->reset();
 			current=current->next;
 		}
 	}
@@ -393,13 +406,14 @@ void input(data* a,Event event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl)
 {
 	filename_list list_ptr;
 	dir_preview(&list_ptr,"system_files/object_textures");
 	Texture r;
 	r.loadFromFile("system_files/hint1.png");
 	Celestial_Body* planet;
+	object* obj; 
 	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+500)),hint("system_files/hint.png",Vector2f(50,50),k,55,55);
 	texture_list t10(k);
 	t10.load(list_ptr);
@@ -414,14 +428,19 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 	Text text2;
 	Font font;
 	font.loadFromFile("arial.ttf");
+	object_list ol(k,font);
 	data block (k,font);
 	title name(k,1,&font);
 	name.name = atl.name;
 	title name1(k,0,&font);
 	Vector2i p; 
 	block.origin();
+	ol.list(&atl);
 	Event event;
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
+	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
+	ol.scroll(0);
+	t10.scroll(0);
 	while (i) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
@@ -431,13 +450,41 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
+			{
+				t10.scroll(1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
+			{
+				t10.scroll(-1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Down)
+			{
+				ol.scroll(-1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Up)
+			{
+				ol.scroll(1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::LControl)
+			{
+				if(ol.active)
+				{ 	
+				//ol.remove(&atl);
+					atl.remove();
+					attr_remove(attr, &atl);
+					ol.remove();
+					ol.scroll(0);
+				}
+			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 
 			{
 				block.step_check(p,k);
 				name.check(p,k);
 				name1.check(p,k);
 				t10.check(p);
-				if (save.pressed(p,k))
+				ol.check(p,&atl);
+				if (save.pressed(p,k) && name.name.size())
 				{
 					save_system(atl,name.name);
 				}
@@ -461,19 +508,38 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 			if(event.type == Event::Closed || 
 			(event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
 			i=0;
-			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Return)
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Return && name1.name.size())
 			{
 				block.last_update();
-				planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
-				atl.add(planet);
-				atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
-				attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
-				delete planet;
+					if(block.first->all_res && block.first->next->all_res)
+					{
+						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
+						atl.add(planet);
+						atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
+						obj = new object(atl.last,&(ol.font),k);
+						ol.add(obj);
+						attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
+						delete planet;
+						block.reset();
+						name1.reset();
+						ol.scroll(0);
+					}
 			}
-			if(name.flag==0 && name1.flag==0)
+			if(name.flag==0 && name1.flag==0 && event.type == Event::KeyPressed && event.key.code == Keyboard::P)
 			{	
-				if(event.type == Event::KeyPressed && event.key.code == Keyboard::P) fl = 1;
-				if(event.type == Event::KeyPressed && event.key.code == Keyboard::S) fl = 0;
+				switch (fl)
+					{
+						case (0) :
+						{
+							fl=1;
+							break;
+						}
+						case (1):
+						{
+							fl=0;
+							break;
+						}
+					}
 			}
 			input(&name,event);
 			input(&name1,event);
@@ -482,9 +548,12 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 			name.update();
 			name1.update();
 		}
-		if(fl) Motion(&atl, time, 0.01 * time, WIDTH, 0.01e-19, attr);
+		if(fl) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr);
+		//if(!fl) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
 		window->clear();
+		window->draw(bg);
 		draw(&atl, window);
+		draw(&ol, window);
 		block.draw(window);
 		name.draw(window);
 		name1.draw(window);
@@ -496,6 +565,7 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 		window->display();
 	}
 	block.destroy();
+	ol.destroy();
 	atl.del();
 	list_ptr.destroy();
 	t10.destroy();

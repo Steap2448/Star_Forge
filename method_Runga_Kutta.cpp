@@ -2,7 +2,7 @@
 
 
 
-Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, Phase_space* attr)
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, Phase_space* attr)////Correct exeptions
 {
 	double time = 0;
 	if (atl-> amount <= 1) 

@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream> 
 #include "load-save-functions.cpp"
-#include "general.hpp"
 #define Size Vector2f(500,80)
 #define HEIGHT 400
 #define LENGTH 1270
@@ -16,7 +15,7 @@
 #define LENGTH2 1600
 #define T_SCALE 1
 #define WIDTH 768
-char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.png","system_files/earth.png","system_files/mercury.png","system_files/venus.png","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
+char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
 
 class comand
 {
@@ -46,8 +45,219 @@ class comand
 		if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+s.x)&&(p.y<p1.y+s.y)) return 1;
 		else return 0;
 	}	
+	
 };
 
+class object
+{
+	public:
+	Text name;
+	RectangleShape Box;
+	object* next;
+	Atlas_node eq;
+	int vs;
+	object(Atlas_node a,Font* font,float k)
+	{
+		eq = a;
+		Text t;
+		t.setString(a->body.body_name);
+		t.setFont(*font);
+		t.setColor(Color::White);
+		t.setCharacterSize(CHARSIZE*k);
+		name = t;
+		RectangleShape tmp(SizeS*k);
+		tmp.setFillColor(Color::Black);
+		tmp.setOutlineThickness(4);
+		Box = tmp;
+		vs = 1;
+	}
+	void draw(RenderWindow* window)
+	{
+		if(vs)
+		{
+			window->draw(Box);
+			window->draw(name);
+		}
+	}
+};
+
+class object_list
+{
+	public:
+	object* first;
+	object* last;
+	object* current;
+	float k;
+	int counter;
+	int vis;
+	int sign;
+	Font font;
+	Atlas_node active;
+	object_list(float k1,Font font1)
+	{
+		font = font1;
+		first = NULL;
+		last = NULL;
+		current = NULL;
+		active = NULL;
+		k=k1;
+		counter = 0;
+		vis = 0;
+		sign = 0;
+	}
+	void add(object* a)
+	{
+		Vector2f p;
+		if(first == NULL)
+		{
+			first = a;
+			last = a;
+			current = a;
+			a->Box.setPosition((LENGTH-180)*k,(HEIGHT-300)*k);
+			a->name.setPosition((LENGTH-130)*k,(HEIGHT-300+20)*k);
+		}
+		else 
+		{
+			p = last->Box.getPosition();
+			last->next = a;
+			last = a;
+			
+		}
+		a->next=NULL;
+		a->Box.setPosition((LENGTH-180)*k,p.y+120*k);
+		a->name.setPosition((LENGTH-130)*k,p.y+140*k);
+		counter++;
+	}
+	void destroy()
+	{
+		current=first;
+		while(current!=NULL)
+		{
+			current = first->next;
+			delete first;
+			first = current;
+		}
+	}
+	void list(Atlas* atl)
+	{
+		Atlas_node current;
+		current = atl->first;
+		while(current)
+		{
+			object* tmp = new object(current,&font,k);
+			add(tmp);
+			current = current->next;
+		}
+	}
+	void check(Vector2i p,Atlas* atl)
+	{
+		object* current = first;
+		Vector2f p1;
+		active = NULL;
+		atl->active = NULL;
+		while (current!=NULL)
+		{
+			p1 = current->Box.getPosition();
+			if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+			{
+				active = current->eq;
+				atl->active = current->eq;
+				current->Box.setFillColor(Color::Green);
+			}
+			else current->Box.setFillColor(Color::Black);
+			current=current->next;
+		}
+		return ;
+	}
+	/*void set()
+	{
+		current = first;
+		counter = 0;
+		while (current!=NULL)
+		{
+			current->Box.setPosition((LENGTH-180)*k,(HEIGHT-300+120*counter)*k);
+			current->name.setPosition((LENGTH-130)*k,(HEIGHT-300+20+120*counter)*k);
+			current = current->next;
+			counter++;
+		}
+		return;
+	}*/
+	void set(object* obj)
+	{
+		while (obj!=NULL)
+		{
+			obj->Box.move(0,-120*k);
+			obj->name.move(0,-120*k);
+			obj = obj->next;
+		}
+		return;
+	}
+	void remove()
+	{
+		object* tmp;
+		object* ntr;
+		tmp = first;
+		if (tmp->eq == active)
+		{
+			if(tmp->next)set(tmp->next);
+			tmp = first->next;
+			delete first;
+			first = tmp;
+			if(counter == 1) first = NULL;
+			active = NULL;
+			counter--;
+			return;
+		}
+		while (tmp->next && tmp->next->eq!=active)
+		{
+			tmp = tmp -> next;
+		}
+		if(tmp->next==last) last = tmp;
+		if(tmp->next)
+		{
+			set(tmp->next);
+			ntr=tmp->next;
+		}
+		else ntr->next = NULL;
+		if (ntr->next) tmp->next=tmp->next->next;
+		else tmp->next = NULL;
+		delete ntr;
+		counter--;
+		active = NULL;
+		sign = 0;
+	}
+	void scroll(int j)
+	{
+		object* current = first;
+		Vector2f p1;
+		if(sign*j<=0||vis>0)
+		{
+			vis = 0;
+			while(current!=NULL)
+			{
+				current->name.move(0,j*30*k);
+				current->Box.move(0,j*30*k);
+				p1=current->Box.getPosition();
+				if(p1.y<40*k||p1.y>1000*k) current->vs = 0;
+				else current->vs = 1;
+				vis+=current->vs;
+				current = current->next;
+			}
+		}
+		sign = j;
+	}
+};
+
+void draw(object_list* ol,RenderWindow* window)
+{
+	object* current = ol->first;
+	while (current!=NULL)
+	{
+		current->draw(window);
+		current=current->next;
+	}
+	return;
+}
 
 class comand_list
 {
@@ -248,6 +458,7 @@ class texture
 	public:
 	filename name;
 	Texture t;
+	int vs;
 	RectangleShape sample;
 	texture* next;
 	texture (float k, filename name1)
@@ -260,7 +471,7 @@ class texture
 	}
 	void draw(RenderWindow* window)
 	{
-		window->draw(sample);
+		if (vs) window->draw(sample);
 	}
 	int pressed(Vector2i p,float k)
 	{
@@ -279,6 +490,8 @@ class texture_list
 	texture* current;
 	float k;
 	int counter;
+	int vis;
+	int sign;
 	std::string path;
 	texture_list(float k1)
 	{
@@ -287,6 +500,8 @@ class texture_list
 		k=k1;
 		counter = 0;
 		path="_";
+		vis = 0;
+		sign = 0;
 	}
 	void add(texture* a)
 	{
@@ -326,6 +541,24 @@ class texture_list
 			current = current->next;
 		}
 	}
+	void scroll(int j)
+	{
+		texture* current = first;
+		if(sign*j<=0||vis>5)
+		{
+			vis = 0;
+			while(current!=NULL)
+			{
+				current->sample.move(j*30*k,0);
+				Vector2f p=current->sample.getPosition();
+				if(p.x<(LENGTH2-230)*k||p.x>(LENGTH2+160)*k) current->vs = 0;
+				else current->vs = 1;
+				vis+=current->vs;
+				current = current->next;
+			}
+		}
+		sign = j;
+	}
 	void check(Vector2i p)
 	{
 		texture* current = first;
@@ -348,7 +581,7 @@ void draw(texture_list* cl,RenderWindow* window)
 	texture* current = cl->first;
 	while (current!=NULL)
 	{
-		window->draw(current->sample);
+		current->draw(window);
 		current=current->next;
 	}
 	return;
@@ -360,6 +593,7 @@ class save_file
 	RectangleShape button;
 	save_file* next;
 	std::string name;
+	int vs;
 	Text text;
 	save_file()
 	{
@@ -378,11 +612,15 @@ class save_file
 		tmp.setFillColor(Color::Black);
 		tmp.setOutlineThickness(10);
 		button = tmp;
+		vs = 0;
 	}
 	void draw(RenderWindow* window)
 	{
-		window->draw(button);
-		window->draw(text);
+		if(vs)
+		{
+			window->draw(button);
+			window->draw(text);
+		}
 	}
 };
 
@@ -395,6 +633,8 @@ class save_list
 	RectangleShape border;
 	float k;
 	int counter;
+	int vis;
+	int sign;
 	Font font;
 	std::string load;
 	save_list(float k1,Font font1)
@@ -402,6 +642,7 @@ class save_list
 		font = font1;
 		first = NULL;
 		last = NULL;
+		current = NULL;
 		k=k1;
 		RectangleShape R(Vector2f(730*k,1100*k));
 		R.setOutlineThickness(3);
@@ -410,6 +651,8 @@ class save_list
 		border = R;
 		counter = 0;
 		load = "_";
+		vis = 0;
+		sign = 0;
 	}
 	void add(save_file* a)
 	{
@@ -439,6 +682,26 @@ class save_list
 			first = current;
 		}
 	}
+	void scroll(int j)
+	{
+		save_file* current = first;
+		Vector2f p1;
+		if(sign*j<=0||vis>=8)
+		{
+			vis = 0;
+			while(current!=NULL)
+			{
+				current->text.move(0,j*30*k);
+				current->button.move(0,j*30*k);
+				p1=current->button.getPosition();
+				if(p1.y<40*k||p1.y>1040*k) current->vs = 0;
+				else current->vs = 1;
+				vis+=current->vs;
+				current = current->next;
+			}
+		}
+		sign = j;
+	}
 	void check(Vector2i p)
 	{
 		save_file* current = first;
@@ -458,9 +721,10 @@ class save_list
 	{
 		filename* current;
 		current = fnl.first;
+		save_file* tmp;
 		while(current)
 		{
-			save_file* tmp = new save_file(k,current->name,&font);
+			tmp = new save_file(k,current->name,&font);
 			add(tmp);
 			current = current->next;
 		}

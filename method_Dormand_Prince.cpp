@@ -251,7 +251,7 @@ double error(Phase_space k)
 	return err;
 }
 
-Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr)
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr)//Correct exeptions
 {
 	double time = step, step_ad = step, err, s;
 	if (atl-> amount <= 1) 
@@ -394,6 +394,23 @@ Phase_space* attr_add(Phase_space* attr, Celestial_Body* a)
 	for (int i = 1; i < 10; i ++)
 	{
 		attr[i].add();
+	}
+	return attr;
+}
+
+Phase_space* attr_remove(Phase_space* attr, Atlas* atl)
+{
+	for (int i = 0; i < 10; i++) attr[i].remove();
+	if (attr[0].amount != atl->amount) return attr;
+	if (atl -> amount == 0) return attr;
+	Atlas_node tmp = atl->first;
+	Phase_space_node tmp1 = attr[0].first;
+	while (tmp != NULL)
+	{
+		tmp1->body = Phase_vector(tmp->body.x, tmp->body.y, tmp->body.v_x, tmp->body.v_y);
+		tmp1->mass = tmp->body.Mass;
+		tmp = tmp -> next;
+		tmp1 = tmp1 -> next;
 	}
 	return attr;
 }

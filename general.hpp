@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <pthread.h>
-#include <SFML/Graphics.hpp>
 #include <cmath>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "celestial_body.hpp"
 #include "method_Dormand_Prince.hpp"
@@ -13,6 +14,8 @@
 #include "celestial_body.cpp"
 #include "method_Dormand_Prince.cpp"
 #include "method_Runga_Kutta.cpp"
+#include "input_last.cpp"
+
 
 using namespace sf;
 #endif
