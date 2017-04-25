@@ -304,13 +304,15 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		tmp->avatar = avat;
 		if(last != NULL)
 		{
-		last->next = tmp;
-		last = last -> next;
+			last->next = tmp;
+			last = last -> next;
+			std::cout<<first<<"\n";
 		}
 		else
 		{
 			last = tmp;
 			first = tmp;
+			std::cout<<first<<" null\n";
 		}
 		amount++;
 		return;
@@ -350,32 +352,69 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		tmp -> next = active -> next;
 		delete active;
 		active = NULL;
+	void remove()
+	{
+		object* tmp;
+		object* ntr;
+		tmp = first;
+		if (tmp->eq == active)
+		{
+			if(tmp->next)set(tmp->next);
+			tmp = first->next;
+			delete first;
+			first = tmp;
+			if(counter == 1) first = NULL;
+			active = NULL;
+			counter--;
+			return;
+		}
+		while (tmp->next && tmp->next->eq!=active)
+		{
+			tmp = tmp -> next;
+		}
+		if(tmp->next==last) last = tmp;
+		if(tmp->next)
+		{
+			set(tmp->next);
+			ntr=tmp->next;
+		}
+		else ntr->next = NULL;
+		if (ntr->next) tmp->next=tmp->next->next;
+		else tmp->next = NULL;
+		delete ntr;
+		counter--;
+		active = NULL;
+		sign = 0;
+	}
 }*/
 
 void Atlas::remove()
 {
+	std::cout<<amount<<"\n";
+	std::cout<<first<<"\n";
 	Atlas_node tmp;
-	//Atlas_node ntr;
-	std::cout<<active->body.body_name<<"\n";
 	tmp = first;
 	if (tmp == active)
-	{
+	{	
 		tmp = first->next;
-		delete first;
+		delete active;
 		first = tmp;
+		if(amount == 1) first = NULL;
 		active = NULL;
+		amount--;
+		std::cout<<first<<"\n";
 		return;
 	}
 	while (tmp->next && tmp->next!=active)
 	{
-		std::cout<<tmp->body.body_name<<"\n";
 		tmp = tmp -> next;
 	}
-	//ntr=tmp->next;
+	if(tmp->next==last) last = tmp;
 	if (active->next) tmp->next=active->next;
 	else tmp->next = NULL;
 	delete active;
 	amount--;
+	std::cout<<first<<"\n";
 	active = NULL;
 	}
 

@@ -474,7 +474,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 					atl.remove();
 					ol.remove();
 					ol.scroll(0);
-					//ol.set();
 				}
 			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 

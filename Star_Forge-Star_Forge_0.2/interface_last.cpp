@@ -107,21 +107,25 @@ class object_list
 	}
 	void add(object* a)
 	{
+		Vector2f p;
 		if(first == NULL)
 		{
-			a->next=NULL;
 			first = a;
 			last = a;
 			current = a;
+			a->Box.setPosition((LENGTH-180)*k,(HEIGHT-300)*k);
+			a->name.setPosition((LENGTH-130)*k,(HEIGHT-300+20)*k);
 		}
 		else 
 		{
-			a->next=NULL;
+			p = last->Box.getPosition();
 			last->next = a;
 			last = a;
+			
 		}
-		a->Box.setPosition((LENGTH-180)*k,(HEIGHT-300+120*counter)*k);
-		a->name.setPosition((LENGTH-130)*k,(HEIGHT-300+20+120*counter)*k);
+		a->next=NULL;
+		a->Box.setPosition((LENGTH-180)*k,p.y+120*k);
+		a->name.setPosition((LENGTH-130)*k,p.y+140*k);
 		counter++;
 	}
 	void destroy()
@@ -185,7 +189,6 @@ class object_list
 			obj->Box.move(0,-120*k);
 			obj->name.move(0,-120*k);
 			obj = obj->next;
-			//counter++;
 		}
 		return;
 	}
@@ -200,26 +203,34 @@ class object_list
 			tmp = first->next;
 			delete first;
 			first = tmp;
+			if(counter == 1) first = NULL;
 			active = NULL;
+			counter--;
 			return;
 		}
 		while (tmp->next && tmp->next->eq!=active)
 		{
 			tmp = tmp -> next;
 		}
-		if(tmp->next)set(tmp->next);
-		ntr=tmp->next;
+		if(tmp->next==last) last = tmp;
+		if(tmp->next)
+		{
+			set(tmp->next);
+			ntr=tmp->next;
+		}
+		else ntr->next = NULL;
 		if (ntr->next) tmp->next=tmp->next->next;
 		else tmp->next = NULL;
 		delete ntr;
 		counter--;
 		active = NULL;
+		sign = 0;
 	}
 	void scroll(int j)
 	{
 		object* current = first;
 		Vector2f p1;
-		if(sign*j<=0||vis>=7)
+		if(sign*j<=0||vis>0)
 		{
 			vis = 0;
 			while(current!=NULL)
