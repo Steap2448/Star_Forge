@@ -142,7 +142,7 @@ class object_list
 	{
 		Atlas_node current;
 		current = atl->first;
-		while(current)
+		while(current)	
 		{
 			object* tmp = new object(current,&font,k);
 			add(tmp);
@@ -151,23 +151,26 @@ class object_list
 	}
 	void check(Vector2i p,Atlas* atl)
 	{
-		object* current = first;
-		Vector2f p1;
-		active = NULL;
-		atl->active = NULL;
-		while (current!=NULL)
+		if(p.x < (LENGTH2-240)*k||p.x > (LENGTH2+240)*k )
 		{
-			p1 = current->Box.getPosition();
-			if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+			object* current = first;
+			Vector2f p1;
+			active = NULL;
+			atl->active = NULL;
+			while (current!=NULL)
 			{
-				active = current->eq;
-				atl->active = current->eq;
-				current->Box.setFillColor(Color::Green);
+				p1 = current->Box.getPosition();
+				if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+				{
+					active = current->eq;
+					atl->active = current->eq;
+					current->Box.setFillColor(Color::Green);
+				}
+				else current->Box.setFillColor(Color::Black);
+				current=current->next;
 			}
-			else current->Box.setFillColor(Color::Black);
-			current=current->next;
+			return ;
 		}
-		return ;
 	}
 	/*void set()
 	{

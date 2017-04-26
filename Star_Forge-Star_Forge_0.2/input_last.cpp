@@ -419,7 +419,11 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	t10.load(list_ptr);
 	hint.button.setOutlineThickness(4.5*k);
 	RectangleShape rules(Vector2f(500,400)*k);
+	RectangleShape rect(Vector2f(480,1100)*k);//нужно добавить
 	rules.setPosition(50*k,50*k);
+	rect.setPosition((LENGTH2-240)*k,-10);//нужно добавить
+	rect.setFillColor(Color::Black);//нужно добавить
+	rect.setOutlineThickness(3);//нужно добавить
 	rules.setTexture(&r);
 	Clock clock;
 	int i = 1;
@@ -470,7 +474,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			{
 				if(ol.active)
 				{ 	
-				//ol.remove(&atl);
 					atl.remove();
 					ol.remove();
 					ol.scroll(0);
@@ -551,6 +554,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		//if(!fl) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
 		window->clear();
 		window->draw(bg);
+		window->draw(rect); //нужно добавить
 		draw(&atl, window);
 		draw(&ol, window);
 		block.draw(window);
