@@ -193,6 +193,7 @@ class msBox
 	{
 		string1 = "";
 		string2 = "";
+		flag1 = 0;
 	}
 };
 
@@ -421,6 +422,10 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	RectangleShape rules(Vector2f(500,400)*k);
 	rules.setPosition(50*k,50*k);
 	rules.setTexture(&r);
+	RectangleShape rect(Vector2f(480,1100)*k);
+	rect.setPosition((LENGTH2-240)*k,-10);//нужно добавить
+	rect.setFillColor(Color::Black);//нужно добавить
+	rect.setOutlineThickness(3);
 	Clock clock;
 	int i = 1;
 	int fl = 0;
@@ -552,6 +557,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		//if(!fl) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
 		window->clear();
 		window->draw(bg);
+		window->draw(rect);
 		draw(&atl, window);
 		draw(&ol, window);
 		block.draw(window);

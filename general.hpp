@@ -18,4 +18,6 @@
 
 
 using namespace sf;
+
+int fatal_error = 0;
 #endif

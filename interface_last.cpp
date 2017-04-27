@@ -14,7 +14,7 @@
 #define HEIGHT2 300
 #define LENGTH2 1600
 #define T_SCALE 1
-#define WIDTH 768
+#define WIDTH 500
 char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
 
 class comand
@@ -67,7 +67,7 @@ class object
 		name = t;
 		RectangleShape tmp(SizeS*k);
 		tmp.setFillColor(Color::Black);
-		tmp.setOutlineThickness(4);
+		tmp.setOutlineThickness(3);
 		Box = tmp;
 		vs = 1;
 	}
@@ -124,8 +124,8 @@ class object_list
 			
 		}
 		a->next=NULL;
-		a->Box.setPosition((LENGTH-180)*k,p.y+120*k);
-		a->name.setPosition((LENGTH-130)*k,p.y+140*k);
+		a->Box.setPosition((LENGTH-180)*k,p.y+100*k);
+		a->name.setPosition((LENGTH-130)*k,p.y+120*k);
 		counter++;
 	}
 	void destroy()
@@ -142,7 +142,7 @@ class object_list
 	{
 		Atlas_node current;
 		current = atl->first;
-		while(current)
+		while(current)	
 		{
 			object* tmp = new object(current,&font,k);
 			add(tmp);
@@ -151,23 +151,26 @@ class object_list
 	}
 	void check(Vector2i p,Atlas* atl)
 	{
-		object* current = first;
-		Vector2f p1;
-		active = NULL;
-		atl->active = NULL;
-		while (current!=NULL)
+		if(p.x < (LENGTH2-240)*k||p.x > (LENGTH2+240)*k )
 		{
-			p1 = current->Box.getPosition();
-			if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+			object* current = first;
+			Vector2f p1;
+			active = NULL;
+			atl->active = NULL;
+			while (current!=NULL)
 			{
-				active = current->eq;
-				atl->active = current->eq;
-				current->Box.setFillColor(Color::Green);
+				p1 = current->Box.getPosition();
+				if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+				{
+					active = current->eq;
+					atl->active = current->eq;
+					current->Box.setFillColor(Color::Green);
+				}
+				else current->Box.setFillColor(Color::Black);
+				current=current->next;
 			}
-			else current->Box.setFillColor(Color::Black);
-			current=current->next;
+			return ;
 		}
-		return ;
 	}
 	/*void set()
 	{
@@ -610,7 +613,7 @@ class save_file
 		text = t;
 		RectangleShape tmp(Vector2f(Size.x*k*0.9,Size.y*k*0.9));
 		tmp.setFillColor(Color::Black);
-		tmp.setOutlineThickness(10);
+		tmp.setOutlineThickness(3);
 		button = tmp;
 		vs = 0;
 	}

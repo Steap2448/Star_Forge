@@ -199,6 +199,8 @@ Celestial_Body Celestial_Body::operator =(Celestial_Body a)
 	v_y = a.v_y;
 	Radius = a.Radius;
 	Mass = a.Mass;
+	texture_path = a.texture_path;
+	body_name = a.body_name;
 	return *this;
 }
 
@@ -213,6 +215,15 @@ Celestial_Body Celestial_Body::operator =(Celestial_Body *a) //added by Nestor
 	texture_path = a->texture_path;
 	body_name = a->body_name;
 	return *this;
+}
+
+void Celestial_Body::satellite_of(Celestial_Body* a)
+{
+	x = x_satellite(x, a);
+	y = y_satellite(y, a);
+	v_x = v_x_satellite(v_x, a);
+	v_y = v_y_satellite(v_y, a);
+	return;
 }
 
 /*int Celestial_Body::operator ==(Celestial_Body a)
@@ -306,13 +317,11 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		{
 			last->next = tmp;
 			last = last -> next;
-			std::cout<<first<<"\n";
 		}
 		else
 		{
 			last = tmp;
 			first = tmp;
-			std::cout<<first<<" null\n";
 		}
 		if (amount == 0) first = last = tmp;
 		amount++;
@@ -320,7 +329,10 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 	}else
 	{
 		Atlas_node tmp = new Atlas_node_el;
-		tmp->body = Celestial_Body(x_satellite(a->x, &(active->body)), y_satellite(a->y, &(active->body)), v_x_satellite(a->v_x, &(active->body)), v_y_satellite(a->v_y, &(active->body)), 0, 0, a->Radius, a->Mass);
+		a->satellite_of(&(active->body));
+		tmp->body = a;
+		std::cout<<active->body<<"\n";
+		std::cout<<tmp->body<<"\n";
 		tmp->next = NULL;
 		sf::CircleShape avat(a->Radius);
 		avat.setOrigin(a->Radius,a->Radius);
@@ -341,9 +353,26 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 			first = tmp;
 		}
 		amount++;
+		active = NULL;
 		return;
 	}
 }
+
+double Atlas::get_max()
+{
+	if (amount = 0) return 0;
+	double max = 0, k;
+	Atlas_node tmp = first;
+	while (tmp != NULL)
+	{
+		k = (tmp->body.x * tmp->body.x) + (tmp->body.y * tmp->body.y);
+		if (k > max) max = k;
+		tmp = tmp -> next;
+	}
+	return max;
+}
+
+
 
 /*void Atlas::remove()
 {
@@ -393,17 +422,21 @@ void Atlas::remove()
 {
 	if (active == NULL) return;
 	Atlas_node tmp = first;
-	if (tmp = active)
+	if (first == active)
 	{
-		first = tmp -> next;
+		first = first -> next;
+		if (active -> next == NULL) last = tmp;
+		active = NULL;
 		delete tmp;
 		amount--;
 		return;
 	}
 	while (tmp -> next != active) tmp = tmp -> next;
 	tmp -> next = active -> next;
+	if (active -> next == NULL) last = tmp;
 	amount--;
 	delete active;
+	active = NULL;
 	return; 
 }
 

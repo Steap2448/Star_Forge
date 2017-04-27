@@ -228,16 +228,8 @@ class Phase_space
 	{
 		Phase_space_node tmp = first;
 		if (tmp == NULL) return;
-		if (tmp -> next == NULL)
-		{
-			delete tmp;
-			first = NULL;
-			amount = 0;
-			return;
-		}
-		while (tmp -> next -> next != NULL) tmp = tmp -> next;
-		delete tmp -> next;
-		tmp -> next = NULL;
+		first = first -> next;
+		delete tmp;
 		amount--;
 		return;
 	}
@@ -271,13 +263,13 @@ class Phase_space
 	}*/
 };
 
-double distance(double x1, double y1, double x2, double y2);
+double distance(double x1, double y1, double x2, double y2, double err);
 
-Phase_space* f(Phase_space k, Phase_space* res_v);
+Phase_space* f(Phase_space k, Phase_space* res_v, double err);
 
 double error(Phase_space k);
 
-Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr);
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr, double err);
 
 Phase_space* attr_creator(Atlas* atl);
 
