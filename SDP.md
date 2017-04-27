@@ -10,7 +10,7 @@
          * Load doesn't show information about the system
          * Parameters of existing planets and stars are not shown
          * There are no distinctions between stars and planets -- everything is considered a celestial body
-    * Limitations - work in progess
+    * Limitations -- 50 mb of RAM
     * Environment - Linux, g++
 3. Development
     * Components (Interface)
