@@ -1,6 +1,8 @@
 #ifndef GENERAL
 #define GENERAL
 
+int fatal_error = 0;
+
 #include <iostream>
 #include <pthread.h>
 #include <cmath>
@@ -18,6 +20,4 @@
 
 
 using namespace sf;
-
-int fatal_error = 0;
 #endif

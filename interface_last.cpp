@@ -189,8 +189,8 @@ class object_list
 	{
 		while (obj!=NULL)
 		{
-			obj->Box.move(0,-120*k);
-			obj->name.move(0,-120*k);
+			obj->Box.move(0,-100*k);
+			obj->name.move(0,-100*k);
 			obj = obj->next;
 		}
 		return;

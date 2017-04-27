@@ -315,6 +315,7 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		tmp->avatar = avat;
 		if(last != NULL)
 		{
+			std::cout<<last<<" 1\n";
 			last->next = tmp;
 			last = last -> next;
 		}
@@ -331,8 +332,6 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		Atlas_node tmp = new Atlas_node_el;
 		a->satellite_of(&(active->body));
 		tmp->body = a;
-		std::cout<<active->body<<"\n";
-		std::cout<<tmp->body<<"\n";
 		tmp->next = NULL;
 		sf::CircleShape avat(a->Radius);
 		avat.setOrigin(a->Radius,a->Radius);
@@ -424,10 +423,38 @@ void Atlas::remove()
 	Atlas_node tmp = first;
 	if (first == active)
 	{
+		if (first == last)
+		{
+			delete active;
+			first = NULL;
+			last = NULL;
+			amount = 0;
+			active = 0;
+			return;
+		}
 		first = first -> next;
 		if (active -> next == NULL) last = tmp;
 		active = NULL;
 		delete tmp;
+		amount--;
+		return;
+	}
+	if (active == last)
+	{
+		if (first == last)
+		{
+			delete active;
+			first = NULL;
+			last = NULL;
+			amount = 0;
+			active = 0;
+			return;
+		}
+		while (tmp->next != last) tmp = tmp -> next;
+		tmp -> next = NULL;
+		delete active;
+		active = NULL;
+		last = tmp;
 		amount--;
 		return;
 	}

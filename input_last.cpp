@@ -443,7 +443,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	ol.list(&atl);
 	Event event;
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
-	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
+	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, 0);
 	ol.scroll(0);
 	t10.scroll(0);
 	while (i) 
@@ -553,7 +553,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			name.update();
 			name1.update();
 		}
-		if(fl) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr);
+		if(fl) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, 0);
 		//if(!fl) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
 		window->clear();
 		window->draw(bg);

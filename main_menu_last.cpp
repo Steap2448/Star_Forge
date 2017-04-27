@@ -136,7 +136,7 @@ int main()
 			draw(&Settings,&window);
 			Settings.slide(lim,Settings.counter);
 		}
-		Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr);
+		Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, 0);
 		window.draw(background);
 		draw(&cl, &window);
 		window.draw(title);
