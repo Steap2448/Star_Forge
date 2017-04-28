@@ -407,7 +407,7 @@ void input(data* a,Event event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi,int mode)
 {
 	Music me;
 	me.openFromFile("system_files/me.ogg");
@@ -435,6 +435,8 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	rect.setFillColor(Color::Black);//нужно добавить
 	rect.setOutlineThickness(3);
 	Clock clock;
+	Vector2i movl(0,0);
+	double blo = 1;
 	int snd = 0;
 	int i = 1;
 	int fl = 0;
@@ -447,6 +449,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	title name(k,1,&font);
 	name.name = atl.name;
 	title name1(k,0,&font);
+	Atlas_node tmp;
 	Vector2i p; 
 	block.origin();
 	ol.list(&atl);
@@ -455,7 +458,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	ol.scroll(0);
 	t10.scroll(0);
 	double range=atl.get_max();
-	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);
+	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);	
 	while (i) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
@@ -465,9 +468,34 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH)
+			{
+				movl.x = -(Mouse::getPosition(*window).x-WIDTH/2);
+				movl.y = -(Mouse::getPosition(*window).y-WIDTH/2);
+			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
 			{
 				t10.scroll(1);
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
+			{
+				blo*=0.5;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
+			{
+				blo*=2;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
 			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
 			{
@@ -485,7 +513,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			{
 				if(ol.active)
 				{ 	
-				//ol.remove(&atl);
 					atl.remove();
 					attr_remove(attr, &atl);
 					ol.remove();
@@ -569,8 +596,16 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			name.update();
 			name1.update();
 		}
-		if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*2);
-		if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);
+		if(mode == 1)
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		}
+		else
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
+		}
 		window->clear();
 		window->draw(bg);
 		window->draw(rect);

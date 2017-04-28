@@ -310,7 +310,7 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, doubl
 		attr[8] = attr[1] * b[7][0] + attr[3] * b[7][2] + attr[4] * b[7][3] + attr[5] * b[7][4] + attr[6] * b[7][5] + attr[7] * b[7][6];
 		attr[9] = attr[1] * b[8][0] + attr[3] * b[8][2] + attr[4] * b[8][3] + attr[5] * b[8][4] + attr[6] * b[8][5] + attr[7] * b[8][6];
 		erro = error(attr[8] - attr[9]);
-		s = pow(mistake * step/(2*1), 0.2);
+		s = pow(mistake * step/(2*erro), 0.2);
 		attr[0] += attr[8];
 		time += step_ad;
 		if (step_ad * s > step) step_ad = step;
