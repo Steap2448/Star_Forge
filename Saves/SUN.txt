@@ -1,6 +1,7 @@
-5 
-930864 4.411e+06 -0.0128877 0.182437 0 0 20 1.9885e+30 255 system_files/object_textures/sun.png SUN 
-2.22047e+10 -4.59941e+10 43974.1 31293.7 0 0 5 3.3011e+23 255 system_files/object_textures/mercury.png MERCURY 
-7.35617e+10 7.87551e+10 -25584.9 24141 0 0 5 4.8675e+24 255 system_files/object_textures/venus.png VENUS 
--8.65542e+10 -1.29891e+11 24376.2 -15758.5 0 0 5 5.9726e+24 255 system_files/object_textures/earth.png EARTH 
--1.87145e+11 1.55585e+11 -15496 -16375.9 0 0 5 6.4171e+23 255 system_files/object_textures/mercury.png MARS 
+6 
+1.04199e+06 2.22882e+07 -0.0350009 0.227226 0 0 10 1.9885e+30 255 system_files/object_textures/sun.png SUN 
+-5.48317e+10 4.51207e+10 -30125.6 -26319.3 0 0 2 3.3011e+23 255 system_files/object_textures/mercury.png MERCURY 
+5.55163e+10 -9.3713e+10 29980 17985.3 0 0 2 4.8675e+24 255 system_files/object_textures/venus.png VENUS 
+-1.42764e+11 6.72257e+10 -12456.1 -25925 0 0 2 5.9726e+24 255 system_files/object_textures/earth.png EARTH 
+1.7401e+11 -1.17357e+11 13549.3 22343.5 0 0 2 6.4171e+23 255 system_files/object_textures/mercury.png MARS 
+-1.43351e+11 6.71648e+10 -12337.6 -26699.9 0 0 1 7.346e+22 255 system_files/object_textures/Arid_World.jpg MOON 

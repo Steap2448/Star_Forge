@@ -1,8 +1,3 @@
-#include <iostream>
-#include "celestial_body.hpp"
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <cmath>
 #include "interface_last.cpp"
 using namespace sf;
 std::string l = ".";
@@ -70,6 +65,10 @@ class title
 	void update()
 	{
 		name_t.setString(name);
+	}
+		void reset()
+	{
+		name = "";
 	}
 };
 
@@ -190,6 +189,12 @@ class msBox
 			}
 		}
 	}
+	void reset()
+	{
+		string1 = "";
+		string2 = "";
+		flag1 = 0;
+	}
 };
 
 class data
@@ -267,6 +272,15 @@ class data
 		while (current!=NULL)
 		{
 			current->last_update();
+			current=current->next;
+		}
+	}
+	void reset()
+	{
+		msBox* current = first;
+		while (current!=NULL)
+		{
+			current->reset();
 			current=current->next;
 		}
 	}
@@ -393,52 +407,128 @@ void input(data* a,Event event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi)
 {
+	Music me;
+	me.openFromFile("system_files/me.ogg");
+	me.setLoop(true);
 	filename_list list_ptr;
 	dir_preview(&list_ptr,"system_files/object_textures");
-	Texture r;
+	Texture r,r1;
 	r.loadFromFile("system_files/hint1.png");
+	r1.loadFromFile("system_files/error.png");
 	Celestial_Body* planet;
+	object* obj; 
+	double ch = 0;
 	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+500)),hint("system_files/hint.png",Vector2f(50,50),k,55,55);
 	texture_list t10(k);
+	RectangleShape alarm(Vector2f(500,100)*k);
+	alarm.setPosition(WIDTH/2,WIDTH/2);
+	alarm.setTexture(&r1);
+	alarm.setOrigin(250,50);
 	t10.load(list_ptr);
 	hint.button.setOutlineThickness(4.5*k);
-	RectangleShape rules(Vector2f(500,400)*k);
+	RectangleShape rules(Vector2f(500,750)*k);
 	rules.setPosition(50*k,50*k);
 	rules.setTexture(&r);
+	RectangleShape rect(Vector2f(480,1100)*k);
+	rect.setPosition((LENGTH2-240)*k,-10);//нужно добавить
+	rect.setFillColor(Color::Black);//нужно добавить
+	rect.setOutlineThickness(3);
 	Clock clock;
+	Vector2i movl(0,0);
+	double blo = 1;
+	int snd = 0;
 	int i = 1;
 	int fl = 0;
 	int hnt = 0;
 	Text text2;
 	Font font;
 	font.loadFromFile("arial.ttf");
+	object_list ol(k,font);
 	data block (k,font);
 	title name(k,1,&font);
 	name.name = atl.name;
 	title name1(k,0,&font);
+	Atlas_node tmp;
 	Vector2i p; 
 	block.origin();
+	ol.list(&atl);
 	Event event;
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
+	ol.scroll(0);
+	t10.scroll(0);
+	double range=atl.get_max();
+	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);	
 	while (i) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
-		pthread_mutex_init(&m, NULL);
 		time = T_SCALE * time;	
 		p=Mouse::getPosition(*window);
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH)
+			{
+				movl.x = -(p.x-WIDTH/2);
+				movl.y = -(p.y-WIDTH/2);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
+			{
+				t10.scroll(1);
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
+			{
+				blo*=0.5;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
+			{
+				blo*=2;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
+			{
+				t10.scroll(-1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Down)
+			{
+				ol.scroll(-1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Up)
+			{
+				ol.scroll(1);
+			}
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::LControl)
+			{
+				if(ol.active)
+				{ 	
+					atl.remove();
+					attr_remove(attr, &atl);
+					ol.remove();
+					ol.scroll(0);
+					range=atl.get_max();
+				}
+			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 
 			{
 				block.step_check(p,k);
 				name.check(p,k);
 				name1.check(p,k);
 				t10.check(p);
-				if (save.pressed(p,k))
+				ol.check(p,&atl);
+				if (save.pressed(p,k) && name.name.size())
 				{
 					save_system(atl,name.name);
 				}
@@ -458,23 +548,47 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 						}
 					}
 				}
+				if (fatal_error)
+				{
+					i = 0;
+				}
 			}
 			if(event.type == Event::Closed || 
 			(event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
 			i=0;
-			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Return)
+			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Return && name1.name.size())
 			{
 				block.last_update();
-				planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
-				atl.add(planet);
-				atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
-				attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
-				delete planet;
+					if(block.first->all_res && block.first->next->all_res)
+					{
+						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
+						atl.add(planet);
+						atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
+						obj = new object(atl.last,&(ol.font),k);
+						ol.add(obj);
+						attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
+						delete planet;
+						block.reset();
+						name1.reset();
+						ol.scroll(0);
+						range=atl.get_max();
+					}
 			}
-			if(name.flag==0 && name1.flag==0)
+			if(name.flag==0 && name1.flag==0 && event.type == Event::KeyPressed && event.key.code == Keyboard::P)
 			{	
-				if(event.type == Event::KeyPressed && event.key.code == Keyboard::P) fl = 1;
-				if(event.type == Event::KeyPressed && event.key.code == Keyboard::S) fl = 0;
+				switch (fl)
+					{
+						case (0) :
+						{
+							fl=1;
+							break;
+						}
+						case (1):
+						{
+							fl=0;
+							break;
+						}
+					}
 			}
 			input(&name,event);
 			input(&name1,event);
@@ -483,13 +597,29 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 			name.update();
 			name1.update();
 		}
-		if(fl) Motion(&atl, time, 0.01 * time, WIDTH, 0.01e-19, attr);
+		if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
 		window->clear();
+		window->draw(bg);
 		draw(&atl, window);
+		window->draw(rect);
+		draw(&ol, window);
 		block.draw(window);
 		name.draw(window);
 		name1.draw(window);
 		draw(&t10,window);
+		ch++;
+		if (fatal_error) 
+		{
+			window->draw(alarm);
+			snd++;
+		}
+		if (snd == 1) 
+		{
+				furi->pause();;
+				me.play();
+				snd ++;
+		}
 		if (hnt) window->draw(rules);
 		window->draw(save.button);
 		window->draw(hint.button);
@@ -497,8 +627,8 @@ int work(RenderWindow* window,ConvexShape* shape,float k,Atlas atl)
 		window->display();
 	}
 	block.destroy();
+	ol.destroy();
 	atl.del();
-	pthread_mutex_destroy(&m);
 	list_ptr.destroy();
 	t10.destroy();
 	delete[] attr;

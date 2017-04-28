@@ -8,7 +8,7 @@ double b[9][7] = {  {0,              0,               0,               0,       
 					{19372.0/6561.0, -25360.0/2187.0, 64448.0/6561.0,  -212.0/729.0, 0,                 0,            0}, 
 					{9017.0/3168.0,  -355.0/33.0,     -46732.0/5247.0, 49.0/176.0,   -5103.0/18656.0,   0,            0},
 					{35.0/384.0,     0,               500.0/1113.0,    125.0/192.0,  -2187.0/6784.0,    11.0/84.0,    0},
-					{35.0/384.0,     0,               50.0/1113.0,     125.0/192.0,  -2187.0/6784.0,    11.0/84.0,    0},
+					{35.0/384.0,     0,               500.0/1113.0,     125.0/192.0,  -2187.0/6784.0,    11.0/84.0,    0},
 					{5179.0/57600.0, 0,               7571.0/16695.0,  393.0/640.0,  -92097.0/339200.0, 187.0/2100.0, 1.0/40.0}};
 
 typedef struct _Phase_space_node
@@ -172,6 +172,24 @@ class Phase_space
 		return;
 	}
 	
+	void save(Atlas* atl, double scale,double aph, sf::Vector2i p,double b)
+	{
+		if (atl->amount != amount) return;
+		Atlas_node tmp = atl -> first;
+		Phase_space_node tmp1 = first;
+		while(tmp1 != NULL)
+		{
+			tmp -> body.x = tmp1 -> body.x;
+			tmp -> body.y = tmp1 -> body.y;
+			tmp->avatar.setPosition(x(tmp->body.x, scale,aph,p,b), y(tmp->body.y, scale,aph,p,b));
+			tmp -> body.v_x = tmp1 -> body.v_x;
+			tmp -> body.v_y = tmp1 -> body.v_y;
+			tmp = tmp -> next;
+			tmp1 = tmp1 -> next;
+		} 
+		return;
+	}
+	
 	void add(Celestial_Body* a)
 	{
 		Phase_space_node tmp = first;
@@ -224,6 +242,15 @@ class Phase_space
 		return;
 	}
 	
+	void remove()
+	{
+		Phase_space_node tmp = first;
+		if (tmp == NULL) return;
+		first = first -> next;
+		delete tmp;
+		amount--;
+		return;
+	}
 	
 	~Phase_space()
 	{
@@ -238,11 +265,9 @@ class Phase_space
 	
 	void out()
 	{
-		std::cout<<amount<<"\n";
 		Phase_space_node tmp = first;
 		while(tmp != NULL)
 		{ 
-			std::cout<<tmp->body.x<<" "<<tmp->body.y<<" "<<tmp->body.v_x<<" "<<tmp->body.v_y<<" Mass "<<tmp->mass<<"\n";
 			tmp = tmp -> next;
 		}
 		return;
@@ -253,26 +278,14 @@ class Phase_space
 		delete mass;
 	}*/
 };
-//In case the first method.hpp won`t be used
-/*double x(double x_m, double scale);
 
-double y(double y_m, double scale);
+double distance(double x1, double y1, double x2, double y2, double err);
 
-double x_satellite(double x, Celestial_Body* a);
-
-double y_satellite(double y, Celestial_Body* a);
-
-double v_x_satellite(double v_x, Celestial_Body* a);
-
-double v_y_satellite(double v_y, Celestial_Body* a);*/
-
-double distance(double x1, double y1, double x2, double y2);
-
-Phase_space* f(Phase_space k, Phase_space* res_v);
+Phase_space* f(Phase_space k, Phase_space* res_v, double err);
 
 double error(Phase_space k);
 
-Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr);
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr, double err);
 
 Phase_space* attr_creator(Atlas* atl);
 

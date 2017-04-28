@@ -107,12 +107,29 @@ class Celestial_Body: public Phase_vector
 	Celestial_Body operator -(Phase_vector a);
 	int operator ==(Celestial_Body a);
 	int operator !=(Celestial_Body a);
+	void satellite_of(Celestial_Body* a);
 	friend std::ostream& operator<<(std::ostream& os, Celestial_Body& a)
 	{
 		os<<"("<<a.x<<","<<a.y<<","<<a.v_x<<","<<a.v_y<<")\n";
 		return os;
 	}
 };
+
+double x(double x_m, double scale);
+
+double y(double y_m, double scale);
+
+double x(double x_m, double scale,double aph, sf::Vector2i p,double b);
+
+double y(double y_m, double scale,double aph, sf::Vector2i p,double b);
+
+double x_satellite(double x, Celestial_Body* a);
+
+double y_satellite(double y, Celestial_Body* a);
+
+double v_x_satellite(double v_x, Celestial_Body* a);
+
+double v_y_satellite(double v_y, Celestial_Body* a);
 
 typedef struct _Atlas_node
 {
@@ -137,8 +154,10 @@ class Atlas
 	void draw(sf::RenderWindow window);
 	void move(double scale);
 	void out();
+	double get_max();
 };
 
+void draw(Atlas* atl, sf::RenderWindow* window);
 
 
 
