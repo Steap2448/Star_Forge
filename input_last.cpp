@@ -407,19 +407,28 @@ void input(data* a,Event event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi)
 {
+	Music me;
+	me.openFromFile("system_files/me.ogg");
+	me.setLoop(true);
 	filename_list list_ptr;
 	dir_preview(&list_ptr,"system_files/object_textures");
-	Texture r;
+	Texture r,r1;
 	r.loadFromFile("system_files/hint1.png");
+	r1.loadFromFile("system_files/error.png");
 	Celestial_Body* planet;
 	object* obj; 
+	double ch = 0;
 	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+500)),hint("system_files/hint.png",Vector2f(50,50),k,55,55);
 	texture_list t10(k);
+	RectangleShape alarm(Vector2f(500,100)*k);
+	alarm.setPosition(WIDTH/2,WIDTH/2);
+	alarm.setTexture(&r1);
+	alarm.setOrigin(250,50);
 	t10.load(list_ptr);
 	hint.button.setOutlineThickness(4.5*k);
-	RectangleShape rules(Vector2f(500,400)*k);
+	RectangleShape rules(Vector2f(500,750)*k);
 	rules.setPosition(50*k,50*k);
 	rules.setTexture(&r);
 	RectangleShape rect(Vector2f(480,1100)*k);
@@ -427,6 +436,9 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	rect.setFillColor(Color::Black);//нужно добавить
 	rect.setOutlineThickness(3);
 	Clock clock;
+	Vector2i movl(0,0);
+	double blo = 1;
+	int snd = 0;
 	int i = 1;
 	int fl = 0;
 	int hnt = 0;
@@ -438,14 +450,16 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	title name(k,1,&font);
 	name.name = atl.name;
 	title name1(k,0,&font);
+	Atlas_node tmp;
 	Vector2i p; 
 	block.origin();
 	ol.list(&atl);
 	Event event;
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
-	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, 0);
 	ol.scroll(0);
 	t10.scroll(0);
+	double range=atl.get_max();
+	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);	
 	while (i) 
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
@@ -455,9 +469,34 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH)
+			{
+				movl.x = -(p.x-WIDTH/2);
+				movl.y = -(p.y-WIDTH/2);
+			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
 			{
 				t10.scroll(1);
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
+			{
+				blo*=0.5;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
+			{
+				blo*=2;
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp=tmp->next;
+				}
 			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
 			{
@@ -475,11 +514,11 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			{
 				if(ol.active)
 				{ 	
-				//ol.remove(&atl);
 					atl.remove();
 					attr_remove(attr, &atl);
 					ol.remove();
 					ol.scroll(0);
+					range=atl.get_max();
 				}
 			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 
@@ -509,6 +548,10 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 						}
 					}
 				}
+				if (fatal_error)
+				{
+					i = 0;
+				}
 			}
 			if(event.type == Event::Closed || 
 			(event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
@@ -528,6 +571,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 						block.reset();
 						name1.reset();
 						ol.scroll(0);
+						range=atl.get_max();
 					}
 			}
 			if(name.flag==0 && name1.flag==0 && event.type == Event::KeyPressed && event.key.code == Keyboard::P)
@@ -553,17 +597,29 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			name.update();
 			name1.update();
 		}
-		if(fl) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, 0);
-		//if(!fl) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr);
+		if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
 		window->clear();
 		window->draw(bg);
-		window->draw(rect);
 		draw(&atl, window);
+		window->draw(rect);
 		draw(&ol, window);
 		block.draw(window);
 		name.draw(window);
 		name1.draw(window);
 		draw(&t10,window);
+		ch++;
+		if (fatal_error) 
+		{
+			window->draw(alarm);
+			snd++;
+		}
+		if (snd == 1) 
+		{
+				furi->pause();;
+				me.play();
+				snd ++;
+		}
 		if (hnt) window->draw(rules);
 		window->draw(save.button);
 		window->draw(hint.button);

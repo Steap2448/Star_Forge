@@ -14,7 +14,8 @@
 #define HEIGHT2 300
 #define LENGTH2 1600
 #define T_SCALE 1
-#define WIDTH 500
+#define WIDTH 1080.0
+#define speed 6.0
 char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
 
 class comand
@@ -363,8 +364,8 @@ class comand_list
 		{
 			p2 = border.getPosition();
 			p1 = current->button.getPosition();
-			if(limit*k<p1.x) current->button.move(-4*k*k,0);
-			if((limit-80)*k<p2.x) border.move(-4.0/count*k*k,0);
+			if(limit*k<p1.x) current->button.move(-speed*k,0);
+			if((limit-80)*k<p2.x) border.move(-speed/count*k,0);
 			current=current->next;
 		}
 		return;
@@ -547,7 +548,7 @@ class texture_list
 	void scroll(int j)
 	{
 		texture* current = first;
-		if(sign*j<=0||vis>5)
+		if(sign*j<=0||vis>=5)
 		{
 			vis = 0;
 			while(current!=NULL)
@@ -743,10 +744,10 @@ class save_list
 			p1 = current->button.getPosition();
 			if(limit*k<p1.x)
 			{
-				current->button.move(-4*k*k,0);
-				current->text.move(-4*k*k,0);
+				current->button.move(-speed*k,0);
+				current->text.move(-speed*k,0);
 			}
-			if((limit-80)*k<p2.x) border.move(-4.0/count*k*k,0);
+			if((limit-80)*k<p2.x) border.move(-speed/count*k,0);
 			current=current->next;
 		}
 		return;

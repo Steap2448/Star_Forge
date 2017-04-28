@@ -253,6 +253,18 @@ double y(double y_m, double scale)
 	return res;
 }
 
+double x(double x_m, double scale,double aph, sf::Vector2i p,double b)
+{
+	double res = (x_m * (scale))/(4*b*aph) + scale/2 - p.x;
+	return res;
+}
+
+double y(double y_m, double scale,double aph, sf::Vector2i p,double b)
+{
+	double res = scale/2 - (y_m * scale)/(4*b*aph) - p.y;
+	return res;
+}
+
 double x_satellite(double x, Celestial_Body* a)
 {
 	double res = x + a->x;
@@ -315,7 +327,6 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		tmp->avatar = avat;
 		if(last != NULL)
 		{
-			std::cout<<last<<" 1\n";
 			last->next = tmp;
 			last = last -> next;
 		}
@@ -359,12 +370,12 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 
 double Atlas::get_max()
 {
-	if (amount = 0) return 0;
+	if (amount == 0) return 0;
 	double max = 0, k;
 	Atlas_node tmp = first;
 	while (tmp != NULL)
 	{
-		k = (tmp->body.x * tmp->body.x) + (tmp->body.y * tmp->body.y);
+		k = sqrt((tmp->body.x * tmp->body.x) + (tmp->body.y * tmp->body.y));
 		if (k > max) max = k;
 		tmp = tmp -> next;
 	}
@@ -483,7 +494,6 @@ void Atlas::out()
 	Atlas_node tmp1 = first; 
 	while (tmp1 != NULL)
 	{
-		std::cout<<"Atlas "<<tmp1->body<<"\n";
 		tmp1 = tmp1->next;
 	}
 	return;

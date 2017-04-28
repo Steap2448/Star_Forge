@@ -194,7 +194,7 @@ double v_y_satellite(double v_y, Celestial_Body* a)
 double distance(double x1, double y1, double x2, double y2, double err)
 {
 	double dist = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-	if (dist <= err) fatal_error = 1;
+	if (dist <= 2e8) fatal_error = 1;
 	return dist;
 }
 
@@ -275,7 +275,7 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, doubl
 		attr[8] = attr[1] * b[7][0] + attr[3] * b[7][2] + attr[4] * b[7][3] + attr[5] * b[7][4] + attr[6] * b[7][5] + attr[7] * b[7][6];
 		attr[9] = attr[1] * b[8][0] + attr[3] * b[8][2] + attr[4] * b[8][3] + attr[5] * b[8][4] + attr[6] * b[8][5] + attr[7] * b[8][6];
 		erro = error(attr[8] - attr[9]);
-		s = pow(mistake * step/(2*1), 0.2);
+		s = pow(mistake * step/(2*erro), 0.2);
 		attr[0] += attr[8];
 		time += step_ad;
 		if (step_ad * s > step) step_ad = step;
@@ -283,6 +283,41 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, doubl
 		
 	}
 	attr[0].save(atl, scale);
+	
+	return &attr[0];
+}
+
+Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, double mistake, Phase_space* attr, double err,double aph, sf::Vector2i p,double blo)//Correct exeptions
+{
+	double time = step, step_ad = step, erro, s;
+	if (atl-> amount == 0) 
+	{
+		if (atl -> amount == 1) attr[0].save(atl, scale,aph,p,blo);
+		return &attr[0];
+	}
+	int i;
+	Phase_space_node tmp1, tmp2;
+	while(time < t_scale)
+	{
+		f(attr[0], &(attr[1]), err);
+		f(attr[0] + attr[1] * b[1][0], &(attr[2]), err);
+		f(attr[0] + attr[1] * b[2][0] + attr[2] * b[2][1], &(attr[3]), err);
+		f(attr[0] + attr[1] * b[3][0] + attr[2] * b[3][1] + attr[3] * b[3][2], &(attr[4]), err);
+		f(attr[0] + attr[1] * b[4][0] + attr[2] * b[4][1] + attr[3] * b[4][2] + attr[4] * b[4][3], &(attr[5]), err);
+		f(attr[0] + attr[1] * b[5][0] + attr[2] * b[5][1] + attr[3] * b[5][2] + attr[4] * b[5][3] + attr[5] * b[5][4], &(attr[6]), err);
+		f(attr[0] + attr[1] * b[6][0] + attr[3] * b[6][2] + attr[4] * b[6][3] + attr[5] * b[6][4] + attr[6] * b[6][5], &(attr[7]), err);
+		for(i = 1; i <= 7; i++) attr[i] *= step_ad;
+		attr[8] = attr[1] * b[7][0] + attr[3] * b[7][2] + attr[4] * b[7][3] + attr[5] * b[7][4] + attr[6] * b[7][5] + attr[7] * b[7][6];
+		attr[9] = attr[1] * b[8][0] + attr[3] * b[8][2] + attr[4] * b[8][3] + attr[5] * b[8][4] + attr[6] * b[8][5] + attr[7] * b[8][6];
+		erro = error(attr[8] - attr[9]);
+		s = pow(mistake * step/(2*1), 0.2);
+		attr[0] += attr[8];
+		time += step_ad;
+		if (step_ad * s > step) step_ad = step;
+		else if (step_ad * s < step * 0.0001) step_ad = step * 0.0001;
+		
+	}
+	attr[0].save(atl, scale,aph,p,blo);
 	
 	return &attr[0];
 }

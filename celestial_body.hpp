@@ -119,6 +119,10 @@ double x(double x_m, double scale);
 
 double y(double y_m, double scale);
 
+double x(double x_m, double scale,double aph, sf::Vector2i p,double b);
+
+double y(double y_m, double scale,double aph, sf::Vector2i p,double b);
+
 double x_satellite(double x, Celestial_Body* a);
 
 double y_satellite(double y, Celestial_Body* a);
