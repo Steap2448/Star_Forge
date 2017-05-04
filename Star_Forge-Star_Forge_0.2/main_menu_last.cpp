@@ -1,5 +1,6 @@
 #include "general.hpp"
 #define T_SCALE 1
+
 float k=WIDTH/1080.0;
 
 int main()
@@ -31,10 +32,12 @@ int main()
 	main_menu(&cl,&atl,t);
 	New_(&New);
 	Settings_(&Settings);
+	Vector2i lel(0,0);
+	double blo = 1;
 	background.setFillColor(Color::Black);
 	background.setPosition(k*LENGTH,0);
 	title.setPosition((LENGTH-100)*k,10*k);
-	window.setKeyRepeatEnabled (false);
+	//window.setKeyRepeatEnabled (false);
 	furi.setLoop(true);
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом(Alex: done)
 	sl.scroll(0);
@@ -73,7 +76,9 @@ int main()
 					if(New.mode==0) 
 					{
 						Atlas atl;
-						work(&window,shape,background2,k,atl);
+						work(&window,shape,background2,k,atl,&furi);
+						fatal_error = 0;
+						furi.play();
 						clock.restart();
 					}
 				}		
@@ -85,8 +90,10 @@ int main()
 					{
 						Atlas atl;
 						load_system (sl.load.substr(6),&atl);
-						work(&window,shape,background2,k,atl);
+						work(&window,shape,background2,k,atl,&furi);
+						fatal_error = 0;
 						sl.load="_";
+						furi.play();
 						clock.restart();
 					}
 				}
@@ -94,7 +101,7 @@ int main()
 				{
 					cl.current=cl.first;
 					cl.check(p);
-					if(cl.mode==-1) std::cout<<"main\n";
+					if(cl.mode==-1){}
 					else 
 					{
 						if(cl.mode==3) window.close();
@@ -136,7 +143,7 @@ int main()
 			draw(&Settings,&window);
 			Settings.slide(lim,Settings.counter);
 		}
-		Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr);
+		Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, 0, atl.get_max(),lel,blo);
 		window.draw(background);
 		draw(&cl, &window);
 		window.draw(title);

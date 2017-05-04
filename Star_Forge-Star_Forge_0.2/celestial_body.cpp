@@ -199,6 +199,8 @@ Celestial_Body Celestial_Body::operator =(Celestial_Body a)
 	v_y = a.v_y;
 	Radius = a.Radius;
 	Mass = a.Mass;
+	texture_path = a.texture_path;
+	body_name = a.body_name;
 	return *this;
 }
 
@@ -213,6 +215,15 @@ Celestial_Body Celestial_Body::operator =(Celestial_Body *a) //added by Nestor
 	texture_path = a->texture_path;
 	body_name = a->body_name;
 	return *this;
+}
+
+void Celestial_Body::satellite_of(Celestial_Body* a)
+{
+	x = x_satellite(x, a);
+	y = y_satellite(y, a);
+	v_x = v_x_satellite(v_x, a);
+	v_y = v_y_satellite(v_y, a);
+	return;
 }
 
 /*int Celestial_Body::operator ==(Celestial_Body a)
@@ -239,6 +250,18 @@ double x(double x_m, double scale)
 double y(double y_m, double scale)
 {
 	double res = scale/2 - (y_m * scale)/(6.084e11);
+	return res;
+}
+
+double x(double x_m, double scale,double aph, sf::Vector2i p,double b)
+{
+	double res = (x_m * (scale))/(4*b*aph) + scale/2 - p.x;
+	return res;
+}
+
+double y(double y_m, double scale,double aph, sf::Vector2i p,double b)
+{
+	double res = scale/2 - (y_m * scale)/(4*b*aph) - p.y;
 	return res;
 }
 
@@ -306,20 +329,20 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 		{
 			last->next = tmp;
 			last = last -> next;
-			std::cout<<first<<"\n";
 		}
 		else
 		{
 			last = tmp;
 			first = tmp;
-			std::cout<<first<<" null\n";
 		}
+		if (amount == 0) first = last = tmp;
 		amount++;
 		return;
 	}else
 	{
 		Atlas_node tmp = new Atlas_node_el;
-		tmp->body = Celestial_Body(x_satellite(a->x, &(active->body)), y_satellite(a->y, &(active->body)), v_x_satellite(a->v_x, &(active->body)), v_y_satellite(a->v_y, &(active->body)), 0, 0, a->Radius, a->Mass);
+		a->satellite_of(&(active->body));
+		tmp->body = a;
 		tmp->next = NULL;
 		sf::CircleShape avat(a->Radius);
 		avat.setOrigin(a->Radius,a->Radius);
@@ -340,9 +363,26 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 			first = tmp;
 		}
 		amount++;
+		active = NULL;
 		return;
 	}
 }
+
+double Atlas::get_max()
+{
+	if (amount == 0) return 0;
+	double max = 0, k;
+	Atlas_node tmp = first;
+	while (tmp != NULL)
+	{
+		k = sqrt((tmp->body.x * tmp->body.x) + (tmp->body.y * tmp->body.y));
+		if (k > max) max = k;
+		tmp = tmp -> next;
+	}
+	return max;
+}
+
+
 
 /*void Atlas::remove()
 {
@@ -390,33 +430,53 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 
 void Atlas::remove()
 {
-	std::cout<<amount<<"\n";
-	std::cout<<first<<"\n";
-	Atlas_node tmp;
-	tmp = first;
-	if (tmp == active)
-	{	
-		tmp = first->next;
-		delete active;
-		first = tmp;
-		if(amount == 1) first = NULL;
+	if (active == NULL) return;
+	Atlas_node tmp = first;
+	if (first == active)
+	{
+		if (first == last)
+		{
+			delete active;
+			first = NULL;
+			last = NULL;
+			amount = 0;
+			active = 0;
+			return;
+		}
+		first = first -> next;
+		if (active -> next == NULL) last = tmp;
 		active = NULL;
+		delete tmp;
 		amount--;
-		std::cout<<first<<"\n";
 		return;
 	}
-	while (tmp->next && tmp->next!=active)
+	if (active == last)
 	{
-		tmp = tmp -> next;
+		if (first == last)
+		{
+			delete active;
+			first = NULL;
+			last = NULL;
+			amount = 0;
+			active = 0;
+			return;
+		}
+		while (tmp->next != last) tmp = tmp -> next;
+		tmp -> next = NULL;
+		delete active;
+		active = NULL;
+		last = tmp;
+		amount--;
+		return;
 	}
-	if(tmp->next==last) last = tmp;
-	if (active->next) tmp->next=active->next;
-	else tmp->next = NULL;
-	delete active;
+	while (tmp -> next != active) tmp = tmp -> next;
+	tmp -> next = active -> next;
+	if (active -> next == NULL) last = tmp;
 	amount--;
-	std::cout<<first<<"\n";
+	delete active;
 	active = NULL;
-	}
+	return; 
+}
 
 void Atlas::del()
 {
@@ -434,7 +494,6 @@ void Atlas::out()
 	Atlas_node tmp1 = first; 
 	while (tmp1 != NULL)
 	{
-		std::cout<<"Atlas "<<tmp1->body<<"\n";
 		tmp1 = tmp1->next;
 	}
 	return;

@@ -14,7 +14,8 @@
 #define HEIGHT2 300
 #define LENGTH2 1600
 #define T_SCALE 1
-#define WIDTH 768
+#define WIDTH 1080.0
+#define speed 6.0
 char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
 
 class comand
@@ -67,7 +68,7 @@ class object
 		name = t;
 		RectangleShape tmp(SizeS*k);
 		tmp.setFillColor(Color::Black);
-		tmp.setOutlineThickness(4);
+		tmp.setOutlineThickness(3);
 		Box = tmp;
 		vs = 1;
 	}
@@ -124,8 +125,8 @@ class object_list
 			
 		}
 		a->next=NULL;
-		a->Box.setPosition((LENGTH-180)*k,p.y+120*k);
-		a->name.setPosition((LENGTH-130)*k,p.y+140*k);
+		a->Box.setPosition((LENGTH-180)*k,p.y+100*k);
+		a->name.setPosition((LENGTH-130)*k,p.y+120*k);
 		counter++;
 	}
 	void destroy()
@@ -189,8 +190,8 @@ class object_list
 	{
 		while (obj!=NULL)
 		{
-			obj->Box.move(0,-120*k);
-			obj->name.move(0,-120*k);
+			obj->Box.move(0,-100*k);
+			obj->name.move(0,-100*k);
 			obj = obj->next;
 		}
 		return;
@@ -363,8 +364,8 @@ class comand_list
 		{
 			p2 = border.getPosition();
 			p1 = current->button.getPosition();
-			if(limit*k<p1.x) current->button.move(-4*k*k,0);
-			if((limit-80)*k<p2.x) border.move(-4.0/count*k*k,0);
+			if(limit*k<p1.x) current->button.move(-speed*k,0);
+			if((limit-80)*k<p2.x) border.move(-speed/count*k,0);
 			current=current->next;
 		}
 		return;
@@ -521,7 +522,7 @@ class texture_list
 			last->next = a;
 			last = a;
 		}
-		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(700)*k);
+		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(650)*k);
 		counter++;
 	}
 	void destroy()
@@ -547,7 +548,7 @@ class texture_list
 	void scroll(int j)
 	{
 		texture* current = first;
-		if(sign*j<=0||vis>5)
+		if(sign*j<=0||vis>=5)
 		{
 			vis = 0;
 			while(current!=NULL)
@@ -613,7 +614,7 @@ class save_file
 		text = t;
 		RectangleShape tmp(Vector2f(Size.x*k*0.9,Size.y*k*0.9));
 		tmp.setFillColor(Color::Black);
-		tmp.setOutlineThickness(10);
+		tmp.setOutlineThickness(3);
 		button = tmp;
 		vs = 0;
 	}
@@ -743,10 +744,10 @@ class save_list
 			p1 = current->button.getPosition();
 			if(limit*k<p1.x)
 			{
-				current->button.move(-4*k*k,0);
-				current->text.move(-4*k*k,0);
+				current->button.move(-speed*k,0);
+				current->text.move(-speed*k,0);
 			}
-			if((limit-80)*k<p2.x) border.move(-4.0/count*k*k,0);
+			if((limit-80)*k<p2.x) border.move(-speed/count*k,0);
 			current=current->next;
 		}
 		return;
