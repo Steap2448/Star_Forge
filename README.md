@@ -1,5 +1,5 @@
 # Star_Forge
-A university project. The goal is a program which lets the user create a custom star system and simulate already created models. The user can also save the system he created in order to load it later, along with some premade ones.
+A university project. The goal is a program which lets the user create a custom star system and simulate already created models. The user can also save the system he created in order to load it later, along with some premade ones. The program also allows to load textures from a directory.
 
 The project uses [SFML](https://www.sfml-dev.org/) for working with windows and sounds, and uses the Runge–Kutta and Dormand–Prince methods for calculating the movements of celestial bodies.
 
