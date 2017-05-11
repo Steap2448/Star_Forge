@@ -126,6 +126,10 @@ double x(double x_m, double scale);
 
 double y(double y_m, double scale);
 
+double x(double x_m, double scale,double aph,double b);
+
+double y(double y_m, double scale,double aph,double b);
+
 double x(double x_m, double scale,double aph, sf::Vector2i p,double b);
 
 double y(double y_m, double scale,double aph, sf::Vector2i p,double b);
@@ -160,6 +164,7 @@ class Atlas
 	void move(double scale);
 	void out();
 	double get_max();
+	sf::Vector2i mass_center(double scale ,double aph,double b); //This is new
 };
 
 void draw(Atlas* atl, sf::RenderWindow* window);

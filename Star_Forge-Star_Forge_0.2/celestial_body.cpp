@@ -253,6 +253,18 @@ double y(double y_m, double scale)
 	return res;
 }
 
+double x(double x_m, double scale,double aph,double b)
+{
+	double res = (x_m * (scale))/(4*b*aph) + scale/2;
+	return res;
+}
+
+double y(double y_m, double scale,double aph,double b)
+{
+	double res = scale/2 - (y_m * scale)/(4*b*aph);
+	return res;
+}
+
 double x(double x_m, double scale,double aph, sf::Vector2i p,double b)
 {
 	double res = (x_m * (scale))/(4*b*aph) + scale/2 - p.x;
@@ -286,7 +298,7 @@ double y(double y_m, double scale,double aph, sf::Vector2i p,double b, Atlas_nod
 		return res;
 	}else
 	{
-		double res = ((y_m - target->body.y) * (scale))/(4*b*aph) + scale/2;
+		double res = scale/2 - ((y_m - target->body.y) * (scale))/(4*b*aph) ;
 		return res;	
 	}
 }
@@ -399,7 +411,7 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 double Atlas::get_max()
 {
 	if (amount == 0) return 0;
-	if (amount == 1) return 1;
+	if (amount == 1) return 1.5e11;
 	double max = 0, k;
 	Atlas_node tmp = first;
 	while (tmp != NULL)
@@ -459,6 +471,8 @@ double Atlas::get_max()
 
 void Atlas::remove()
 {
+	if (active == active2)
+	active2 = NULL;
 	if (active == NULL) return;
 	Atlas_node tmp = first;
 	if (first == active)
@@ -541,6 +555,31 @@ void draw(Atlas* atl, sf::RenderWindow* window)
 
 
 
+sf::Vector2i Atlas::mass_center(double scale,double aph,double b) //This is new
+{
+	sf::Vector2i tmp1(0, 0);
+	sf::Vector2i res = tmp1;
+	if (amount == 0) return res;
+	if (amount == 1)
+	{
+		res.x = x(first->body.x, scale, aph, b)-scale/2;
+		res.y = -scale/2+y(first->body.y, scale, aph, b);
+		return res;
+	}
+	Atlas_node tmp = first;
+	double res_x = 0, res_y = 0, res_mass = 0;
+	while (tmp != NULL)
+	{
+		res_x += (tmp -> body.x) * (tmp -> body.Mass);
+		res_y += (tmp -> body.y) * (tmp -> body.Mass);
+		res_mass += tmp -> body.Mass;
+		tmp = tmp -> next;
+	}
+	res.x = x(res_x/res_mass, scale, aph, b)-scale/2;
+	res.y = -scale/2+y(res_y/res_mass, scale, aph, b);
+	std::cout<<res.x<<" "<<res.y<<"\n";
+	return res;	
+}
 
 
 

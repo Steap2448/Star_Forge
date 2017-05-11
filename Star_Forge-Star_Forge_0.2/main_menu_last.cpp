@@ -76,7 +76,15 @@ int main()
 					if(New.mode==0) 
 					{
 						Atlas atl;
-						work(&window,shape,background2,k,atl,&furi);
+						work(&window,shape,background2,k,atl,&furi,1);
+						fatal_error = 0;
+						furi.play();
+						clock.restart();
+					}
+					if(New.mode==1) 
+					{
+						Atlas atl;
+						work(&window,shape,background2,k,atl,&furi,0);
 						fatal_error = 0;
 						furi.play();
 						clock.restart();
@@ -90,7 +98,7 @@ int main()
 					{
 						Atlas atl;
 						load_system (sl.load.substr(6),&atl);
-						work(&window,shape,background2,k,atl,&furi);
+						work(&window,shape,background2,k,atl,&furi,1);
 						fatal_error = 0;
 						sl.load="_";
 						furi.play();

@@ -32,6 +32,7 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, Phase
 Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, Phase_space* attr, double err,double aph, sf::Vector2i p,double blo)////Correct exeptions
 {
 	double time = 0;
+	double step_ad = step;//This is new
 	if (atl-> amount == 0) 
 	{
 		if (atl -> amount == 1) attr[0].save(atl, scale,aph,p,blo);
@@ -45,10 +46,11 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, Phase
 		f(attr[0] + attr[1] * b_r_k[1][0], &(attr[2]), err);
 		f(attr[0] + attr[2] * b_r_k[2][1], &(attr[3]), err);
 		f(attr[0] + attr[3] * b_r_k[3][2], &(attr[4]), err);
-		for(i = 1; i <= 7; i++) attr[i] *= step;
+		for(i = 1; i <= 7; i++) attr[i] *= step_ad; //This is new
 		attr[8] = attr[1] * b[4][0] + attr[2] * b[4][1] + attr[3] * b[4][2] + attr[4] * b[4][3];
 		attr[0] += attr[8];
-		time += step;
+		time += step_ad; //This is new
+		if (step_ad >= (t_scale - time)) step_ad = (t_scale - time); //This is new
 		
 	}
 	attr[0].save(atl, scale ,aph, p, blo);
