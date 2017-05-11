@@ -94,6 +94,7 @@ class object_list
 	int sign;
 	Font font;
 	Atlas_node active;
+	Atlas_node active2;
 	object_list(float k1,Font font1)
 	{
 		font = font1;
@@ -101,6 +102,7 @@ class object_list
 		last = NULL;
 		current = NULL;
 		active = NULL;
+		active2 = NULL;
 		k=k1;
 		counter = 0;
 		vis = 0;
@@ -168,6 +170,29 @@ class object_list
 					current->Box.setFillColor(Color::Green);
 				}
 				else current->Box.setFillColor(Color::Black);
+				current=current->next;
+			}
+			return ;
+		}
+	}
+	void check2(Vector2i p,Atlas* atl)
+	{
+		if(p.x < (LENGTH2-240)*k||p.x > (LENGTH2+240)*k )
+		{
+			object* current = first;
+			Vector2f p1;
+			active2 = NULL;
+			atl->active2 = NULL;
+			while (current!=NULL)
+			{
+				p1 = current->Box.getPosition();
+				if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+				{
+					active2 = current->eq;
+					atl->active2 = current->eq;
+					current->Box.setOutlineColor(Color::Blue);
+				}
+				else current->Box.setOutlineColor(Color::White);
 				current=current->next;
 			}
 			return ;

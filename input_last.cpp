@@ -499,7 +499,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
-			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH)
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH && !hint.pressed(p,k))
 			{
 				movl.x = -(p.x-WIDTH/2);
 				movl.y = -(p.y-WIDTH/2);
@@ -510,23 +510,25 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			}
 			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
 			{
-				blo*=0.5;
+				blo*=1.1;
 				tmp = atl.first;
 				while(tmp)
 				{
-					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
 					tmp=tmp->next;
 				}
+				std::cout<<blo<<"\n";
 			}
 			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
 			{
-				blo*=2;
+				blo*=1/1.1;
 				tmp = atl.first;
 				while(tmp)
 				{
-					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
 					tmp=tmp->next;
 				}
+				std::cout<<blo<<"\n";
 			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
 			{
@@ -550,6 +552,10 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 					ol.scroll(0);
 					range=atl.get_max();
 				}
+			}
+			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Right))
+			{
+				ol.check2(p,&atl);
 			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 
 			{

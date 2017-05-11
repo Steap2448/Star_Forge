@@ -286,7 +286,7 @@ double y(double y_m, double scale,double aph, sf::Vector2i p,double b, Atlas_nod
 		return res;
 	}else
 	{
-		double res = ((y_m - target->body.y) * (scale))/(4*b*aph) + scale/2;
+		double res =scale/2 - ((y_m - target->body.y) * (scale))/(4*b*aph);
 		return res;	
 	}
 }
@@ -399,6 +399,7 @@ void Atlas::add(Celestial_Body* a) //changed by Nestor
 double Atlas::get_max()
 {
 	if (amount == 0) return 0;
+	if (amount == 1) return 1;
 	double max = 0, k;
 	Atlas_node tmp = first;
 	while (tmp != NULL)
