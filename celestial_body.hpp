@@ -160,6 +160,7 @@ class Atlas
 	void move(double scale);
 	void out();
 	double get_max();
+	sf::Vector2i mass_center(double scale); //This is new
 };
 
 void draw(Atlas* atl, sf::RenderWindow* window);

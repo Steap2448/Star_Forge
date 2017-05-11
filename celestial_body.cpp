@@ -528,6 +528,30 @@ void Atlas::out()
 	return;
 }
 
+sf::Vector2i Atlas::mass_center(double scale) //This is new
+{
+	sf::Vector2i res = sf::Vector2i(0, 0);
+	if (amount == 0) return res;
+	if (amount == 1)
+	{
+		res.x = first->body.x;
+		res.y = first->body.y;
+		return res;
+	}
+	Atlas_node tmp = first;
+	double res_x = 0, res_y = 0, res_mass = 0;
+	while (tmp != NULL)
+	{
+		res_x += (tmp -> body.x) * (tmp -> body.Mass);
+		res_y += (tmp -> body.y) * (tmp -> body.Mass);
+		res_mass += tmp -> body.Mass;
+		tmp = tmp -> next;
+	}
+	res.x = x(res_x/res_mass, scale);
+	res.y = y(res_y/res_mass, scale);
+	return res;
+}
+
 void draw(Atlas* atl, sf::RenderWindow* window)
 {
 	Atlas_node tmp = atl->first;
