@@ -2,9 +2,9 @@
 using namespace sf;
 std::string l = ".";
 std::string l2 = "-";
-Color a(200,200,200,255);
+Color gray(200,200,200,255);
 char NAME_PULL[2][20] = {"  OBJECT NAME:","  SYSTEM NAME:"};
-char PULL2[6][20] = {"   Enter mass:"," Enter radius:","      Enter x:","      Enter y:","     Enter Vx:","     Enter Vy:"};
+char PULL2[6][20] = {"          Mass:","       Radius:","                X:","                Y:","               Vx:","               Vy:"};
 std::string::size_type sz;
 
 class title
@@ -25,7 +25,7 @@ class title
 		R.setPosition(( LENGTH2-BASE.x/2)*k,(HEIGHT2-BASE.y/2-60*(2*i+1))*k);
 		RectangleShape fi(NAME*k);
 		fi.setPosition(( LENGTH2-BASE.x/2+230)*k,(HEIGHT2-BASE.y/2-60*(2*i+1)+2)*k);
-		fi.setFillColor(a);
+		fi.setFillColor(gray);
 		base=R;
 		f=fi;
 		intro = NAME_PULL[i];
@@ -58,7 +58,7 @@ class title
 		}
 		else
 		{
-			f.setFillColor(a);
+			f.setFillColor(gray);
 			flag = 0;
 		}
 	}
@@ -76,6 +76,7 @@ class msBox
 {
 	public:
 	msBox* next;
+	msBox* first;
 	RectangleShape base;
 	RectangleShape f1;
 	RectangleShape f2;
@@ -104,8 +105,8 @@ class msBox
 		R.setPosition(( LENGTH2-BASE.x/2)*k,(HEIGHT2-BASE.y/2+i*60)*k);
 		fi1.setPosition(( LENGTH2-BASE.x/2+180)*k,( HEIGHT2-BASE.y/2+(BASE.y-Size2.y)/2+i*60)*k);
 		fi2.setPosition(( LENGTH2-BASE.x/2+360)*k,( HEIGHT2-BASE.y/2+(BASE.y-Size2.y)/4+i*60)*k);
-		fi1.setFillColor(a);
-		fi2.setFillColor(a);
+		fi1.setFillColor(gray);
+		fi2.setFillColor(gray);
 		base=R;
 		f1=fi1;
 		f2=fi2;
@@ -170,7 +171,7 @@ class msBox
 		{
 			step = 0;
 			f1.setFillColor(Color::White);
-			f2.setFillColor(a);
+			f2.setFillColor(gray);
 		}
 		else
 		{	
@@ -179,13 +180,13 @@ class msBox
 			{
 				step = 1;
 				f2.setFillColor(Color::White);
-				f1.setFillColor(a);
+				f1.setFillColor(gray);
 			}
 			else
 			{
 				step = 2;
-				f1.setFillColor(a);
-				f2.setFillColor(a);
+				f1.setFillColor(gray);
+				f2.setFillColor(gray);
 			}
 		}
 	}
@@ -222,12 +223,14 @@ class data
 			first = a;
 			last = a;
 			current = a;
+			a->first = first;
 		}
 		else 
 		{
 			a->next=NULL;
 			last->next = a;
 			last = a;
+			a->first = first;
 		}
 		counter++;
 	}
@@ -344,30 +347,38 @@ void input(title* a,Event event)
 }
 			
 
-void input(msBox* a,Event event)
+void input(msBox* a,Event* event)
 {
 	if(a->step==0)
 	{
+		if(event->type == Event::KeyPressed && (event->key.code == Keyboard::Tab))
+		{
+			a->step=1;
+			a->f2.setFillColor(Color::White);
+			a->f1.setFillColor(gray);
+			std::cout<<"1\n";
+			return;
+		}		
 		if(a->string1.size()<7)
 		{
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num0)||event.key.code == Keyboard::Numpad0)) a->string1+="0";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num1)||event.key.code == Keyboard::Numpad1)) a->string1+="1";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num2)||event.key.code == Keyboard::Numpad2)) a->string1+="2";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num3)||event.key.code == Keyboard::Numpad3)) a->string1+="3";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num4)||event.key.code == Keyboard::Numpad4)) a->string1+="4";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num5)||event.key.code == Keyboard::Numpad5)) a->string1+="5";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num6)||event.key.code == Keyboard::Numpad6)) a->string1+="6";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num7)||event.key.code == Keyboard::Numpad7)) a->string1+="7";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num8)||event.key.code == Keyboard::Numpad8)) a->string1+="8";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num9)||event.key.code == Keyboard::Numpad9)) a->string1+="9";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Subtract)||(event.key.code == Keyboard::Dash)) && a->string1.size()==0) a->string1+="-";
-			if(event.type == Event::KeyPressed && (event.key.code == Keyboard::Period )&&(a->flag1==0)) 
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num0)||event->key.code == Keyboard::Numpad0)) a->string1+="0";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num1)||event->key.code == Keyboard::Numpad1)) a->string1+="1";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num2)||event->key.code == Keyboard::Numpad2)) a->string1+="2";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num3)||event->key.code == Keyboard::Numpad3)) a->string1+="3";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num4)||event->key.code == Keyboard::Numpad4)) a->string1+="4";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num5)||event->key.code == Keyboard::Numpad5)) a->string1+="5";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num6)||event->key.code == Keyboard::Numpad6)) a->string1+="6";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num7)||event->key.code == Keyboard::Numpad7)) a->string1+="7";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num8)||event->key.code == Keyboard::Numpad8)) a->string1+="8";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num9)||event->key.code == Keyboard::Numpad9)) a->string1+="9";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Subtract)||(event->key.code == Keyboard::Dash)) && a->string1.size()==0) a->string1+="-";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Period )||(event->key.code == Keyboard::Comma))&&(a->flag1==0)) 
 			{
 				a->string1+=".";
 				a->flag1=1;
 			}
 		}
-		if(event.type == Event::KeyPressed && (event.key.code == Keyboard::BackSpace)&&(a->string1.size())) 
+		if(event->type == Event::KeyPressed && (event->key.code == Keyboard::BackSpace)&&(a->string1.size())) 
 		{
 			if((a->string1[(a->string1.size())-1]==l)) a->flag1=0;
 			a->string1.erase(a->string1.size()-1,1);
@@ -375,20 +386,39 @@ void input(msBox* a,Event event)
 	}
 	if(a->step==1)
 	{
+		if(event->type == Event::KeyPressed && (event->key.code == Keyboard::Tab))
+		{
+			a->step=2;
+			a->f2.setFillColor(gray);
+			a->f1.setFillColor(gray);
+			if(a->next)
+			{
+				a->next->step = 0;
+				a->next->f1.setFillColor(Color::White);
+			}
+			else
+			{
+				a->first->step = 0;
+				a->first->f1.setFillColor(Color::White);
+			}
+			std::cout<<"2\n";
+			event->key.code = Keyboard::PageUp;
+			return;
+		}		
 		if(a->string2.size()<7)
 		{
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num0)||event.key.code == Keyboard::Numpad0)) a->string2+="0";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num1)||event.key.code == Keyboard::Numpad1)) a->string2+="1";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num2)||event.key.code == Keyboard::Numpad2)) a->string2+="2";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num3)||event.key.code == Keyboard::Numpad3)) a->string2+="3";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num4)||event.key.code == Keyboard::Numpad4)) a->string2+="4";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num5)||event.key.code == Keyboard::Numpad5)) a->string2+="5";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num6)||event.key.code == Keyboard::Numpad6)) a->string2+="6";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num7)||event.key.code == Keyboard::Numpad7)) a->string2+="7";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num8)||event.key.code == Keyboard::Numpad8)) a->string2+="8";
-			if(event.type == Event::KeyPressed && ((event.key.code == Keyboard::Num9)||event.key.code == Keyboard::Numpad9)) a->string2+="9";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num0)||event->key.code == Keyboard::Numpad0)) a->string2+="0";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num1)||event->key.code == Keyboard::Numpad1)) a->string2+="1";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num2)||event->key.code == Keyboard::Numpad2)) a->string2+="2";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num3)||event->key.code == Keyboard::Numpad3)) a->string2+="3";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num4)||event->key.code == Keyboard::Numpad4)) a->string2+="4";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num5)||event->key.code == Keyboard::Numpad5)) a->string2+="5";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num6)||event->key.code == Keyboard::Numpad6)) a->string2+="6";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num7)||event->key.code == Keyboard::Numpad7)) a->string2+="7";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num8)||event->key.code == Keyboard::Numpad8)) a->string2+="8";
+			if(event->type == Event::KeyPressed && ((event->key.code == Keyboard::Num9)||event->key.code == Keyboard::Numpad9)) a->string2+="9";
 		}
-		if(event.type == Event::KeyPressed && (event.key.code == Keyboard::BackSpace)&&(a->string2.size())) 
+		if(event->type == Event::KeyPressed && (event->key.code == Keyboard::BackSpace)&&(a->string2.size())) 
 		{
 			if((a->string2[(a->string2.size())-1]==l)) a->flag2=0;
 			a->string2.erase(a->string2.size()-1,1);
@@ -397,7 +427,7 @@ void input(msBox* a,Event event)
 	
 }
 
-void input(data* a,Event event)
+void input(data* a,Event* event)
 {
 	msBox* current = a->first;
 	while (current!=NULL)
@@ -407,7 +437,7 @@ void input(data* a,Event event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi,int mode)
 {
 	Music me;
 	me.openFromFile("system_files/me.ogg");
@@ -419,9 +449,11 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	r1.loadFromFile("system_files/error.png");
 	Celestial_Body* planet;
 	object* obj; 
-	double ch = 0;
-	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+500)),hint("system_files/hint.png",Vector2f(50,50),k,55,55);
+	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+550)),add("system_files/add.png",SizeS,k,(LENGTH+210),(HEIGHT+350)),reset("system_files/clear.png",SizeS,k,(LENGTH+210),(HEIGHT+450)),hint("system_files/hint.png",Vector2f(30,30),k,55,55);
+	comand cent("system_files/cent.png",SizeS,k,(50),(HEIGHT+450)),col("system_files/col.png",SizeS,k,(50),(HEIGHT+550));
 	texture_list t10(k);
+	col.button.setFillColor(Color::Red);
+	cent.button.setFillColor(Color::Red);
 	RectangleShape alarm(Vector2f(500,100)*k);
 	alarm.setPosition(WIDTH/2,WIDTH/2);
 	alarm.setTexture(&r1);
@@ -438,10 +470,14 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	Clock clock;
 	Vector2i movl(0,0);
 	double blo = 1;
+	double blorp = 1;
 	int snd = 0;
 	int i = 1;
 	int fl = 0;
 	int hnt = 0;
+	int cn = 0;
+	int blip = 0;
+	ai = 0;
 	Text text2;
 	Font font;
 	font.loadFromFile("arial.ttf");
@@ -458,7 +494,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
 	ol.scroll(0);
 	t10.scroll(0);
-	double range=atl.get_max();
+	range=atl.get_max();
 	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);	
 	while (i) 
 	{
@@ -469,7 +505,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
-			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH)
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH && !hint.pressed(p,k)&& !col.pressed(p,k)&& !cent.pressed(p,k))
 			{
 				movl.x = -(p.x-WIDTH/2);
 				movl.y = -(p.y-WIDTH/2);
@@ -477,26 +513,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
 			{
 				t10.scroll(1);
-			}
-			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
-			{
-				blo*=0.5;
-				tmp = atl.first;
-				while(tmp)
-				{
-					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
-					tmp=tmp->next;
-				}
-			}
-			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
-			{
-				blo*=2;
-				tmp = atl.first;
-				while(tmp)
-				{
-					tmp->avatar.setScale(1/blo*0.5,1/blo*0.5);
-					tmp=tmp->next;
-				}
 			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
 			{
@@ -521,6 +537,10 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 					range=atl.get_max();
 				}
 			}
+			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Right))
+			{
+				ol.check2(p,&atl);
+			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)) 
 			{
 				block.step_check(p,k);
@@ -528,9 +548,31 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 				name1.check(p,k);
 				t10.check(p);
 				ol.check(p,&atl);
-				if (save.pressed(p,k) && name.name.size())
+				if (add.pressed(p,k) && name.name.size())
+				{
+									block.last_update();
+					if(block.first->all_res && block.first->next->all_res)
+					{
+						blorp = pow(1.1,blip);
+						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res)*blorp,(double)(block.first->all_res),t10.path,name1.name);
+						atl.add(planet);
+						atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
+						obj = new object(atl.last,&(ol.font),k);
+						ol.add(obj);
+						attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
+						delete planet;
+						ol.scroll(0);
+						range=atl.get_max();
+					}
+				}
+				if (save.pressed(p,k) && name1.name.size())
 				{
 					save_system(atl,name.name);
+				}
+				if (reset.pressed(p,k) && name1.name.size())
+				{
+					block.reset();
+					name1.reset();
 				}
 				if (hint.pressed(p,k))
 				{
@@ -548,32 +590,72 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 						}
 					}
 				}
+				if (col.pressed(p,k))
+				{
+					switch (ai)
+					{
+						case (0) :
+						{
+							ai=1;
+							col.button.setFillColor(Color::Green);
+							break;
+						}
+						case (1):
+						{
+							ai=0;
+							col.button.setFillColor(Color::Red);
+							break;
+						}
+					}
+				}
+				if (cent.pressed(p,k))
+				{
+					switch (cn)
+					{
+						case (0) :
+						{
+							cn=1;
+							cent.button.setFillColor(Color::Green);
+							break;
+						}
+						case (1):
+						{
+							cn=0;
+							cent.button.setFillColor(Color::Red);
+							break;
+						}
+					}
+				}
 				if (fatal_error)
 				{
 					i = 0;
 				}
 			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
+			{
+				blo*=1.1;
+				blorp*=1/blo*0.05+1.2; 
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp=tmp->next;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
+			{
+				blo*=1/1.1;
+				blorp*=1/blo*0.05+1.2; 
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp=tmp->next;
+				}
+			}
 			if(event.type == Event::Closed || 
 			(event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
 			i=0;
-			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Return && name1.name.size())
-			{
-				block.last_update();
-					if(block.first->all_res && block.first->next->all_res)
-					{
-						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
-						atl.add(planet);
-						atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
-						obj = new object(atl.last,&(ol.font),k);
-						ol.add(obj);
-						attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
-						delete planet;
-						block.reset();
-						name1.reset();
-						ol.scroll(0);
-						range=atl.get_max();
-					}
-			}
 			if(name.flag==0 && name1.flag==0 && event.type == Event::KeyPressed && event.key.code == Keyboard::P)
 			{	
 				switch (fl)
@@ -592,13 +674,26 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			}
 			input(&name,event);
 			input(&name1,event);
-			input(&block,event);
+			input(&block,&event);
 			block.update();
 			name.update();
 			name1.update();
 		}
-		if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
-		if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		if(cn)
+		{
+			movl.x = atl.mass_center(WIDTH,range,blo).x;
+			movl.y = atl.mass_center(WIDTH,range,blo).y;
+		}
+		if(mode == 1)
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		}
+		if(mode == 0)
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH,  attr, range/WIDTH*0.001,range,movl,blo);
+		}
 		window->clear();
 		window->draw(bg);
 		draw(&atl, window);
@@ -608,7 +703,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		name.draw(window);
 		name1.draw(window);
 		draw(&t10,window);
-		ch++;
 		if (fatal_error) 
 		{
 			window->draw(alarm);
@@ -616,13 +710,17 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		}
 		if (snd == 1) 
 		{
-				furi->pause();;
-				me.play();
-				snd ++;
+			furi->pause();;
+			me.play();
+			snd ++;
 		}
 		if (hnt) window->draw(rules);
 		window->draw(save.button);
+		window->draw(add.button);
+		window->draw(reset.button);
 		window->draw(hint.button);
+		window->draw(col.button);
+		window->draw(cent.button);
 		window->draw((*shape));
 		window->display();
 	}

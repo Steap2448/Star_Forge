@@ -194,7 +194,7 @@ double v_y_satellite(double v_y, Celestial_Body* a)
 double distance(double x1, double y1, double x2, double y2, double err)
 {
 	double dist = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-	if (dist <= 2e8) fatal_error = 1;
+	if (dist <= range/10e3 && ai) fatal_error = 1;
 	return dist;
 }
 
@@ -278,8 +278,8 @@ Phase_space* Motion(Atlas* atl, double t_scale, double step, double scale, doubl
 		s = pow(mistake * step/(2*erro), 0.2);
 		attr[0] += attr[8];
 		time += step_ad;
-		if (step_ad * s > step) step_ad = step;
-		else if (step_ad * s < step * 0.0001) step_ad = step * 0.0001;
+		if (step_ad * s > (t_scale-time)) step_ad = t_scale-time;
+		else if (step_ad * s < step * TIME_ACCURACY) step_ad = step * TIME_ACCURACY;
 		
 	}
 	attr[0].save(atl, scale);

@@ -1,6 +1,8 @@
 #ifndef METHOD_DORMAN_PRINCE
 #define METHOD_DORMAN_PRINCE
 
+#define TIME_ACCURACY 0.0001
+
 double b[9][7] = {  {0,              0,               0,               0,            0,                 0,            0},
 					{1/5.0,          0,               0,               0,            0,                 0,            0},
 					{30.0/40.0,      9.0/40.0,        0,               0,            0,                 0,            0},  
@@ -181,7 +183,7 @@ class Phase_space
 		{
 			tmp -> body.x = tmp1 -> body.x;
 			tmp -> body.y = tmp1 -> body.y;
-			tmp->avatar.setPosition(x(tmp->body.x, scale,aph,p,b), y(tmp->body.y, scale,aph,p,b));
+			tmp->avatar.setPosition(x(tmp->body.x, scale,aph,p,b, atl->active2), y(tmp->body.y, scale,aph,p,b, atl->active2));
 			tmp -> body.v_x = tmp1 -> body.v_x;
 			tmp -> body.v_y = tmp1 -> body.v_y;
 			tmp = tmp -> next;

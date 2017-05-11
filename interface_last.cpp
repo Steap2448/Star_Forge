@@ -14,9 +14,9 @@
 #define HEIGHT2 300
 #define LENGTH2 1600
 #define T_SCALE 1
-#define WIDTH 1080.0
+#define WIDTH 768.0
 #define speed 6.0
-char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
+char PULL[12][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/rough.png","system_files/CS.png"};
 
 class comand
 {
@@ -94,6 +94,7 @@ class object_list
 	int sign;
 	Font font;
 	Atlas_node active;
+	Atlas_node active2;
 	object_list(float k1,Font font1)
 	{
 		font = font1;
@@ -101,6 +102,7 @@ class object_list
 		last = NULL;
 		current = NULL;
 		active = NULL;
+		active2 = NULL;
 		k=k1;
 		counter = 0;
 		vis = 0;
@@ -168,6 +170,29 @@ class object_list
 					current->Box.setFillColor(Color::Green);
 				}
 				else current->Box.setFillColor(Color::Black);
+				current=current->next;
+			}
+			return ;
+		}
+	}
+	void check2(Vector2i p,Atlas* atl)
+	{
+		if(p.x < (LENGTH2-240)*k||p.x > (LENGTH2+240)*k )
+		{
+			object* current = first;
+			Vector2f p1;
+			active2 = NULL;
+			atl->active2 = NULL;
+			while (current!=NULL)
+			{
+				p1 = current->Box.getPosition();
+				if((p.x>p1.x)&&(p.y>p1.y)&&(p.x<p1.x+SizeS.x*k)&&(p.y<p1.y+SizeS.y*k))
+				{
+					active2 = current->eq;
+					atl->active2 = current->eq;
+					current->Box.setOutlineColor(Color::Blue);
+				}
+				else current->Box.setOutlineColor(Color::White);
 				current=current->next;
 			}
 			return ;
@@ -439,7 +464,7 @@ void Settings_(comand_list* cl)
 {
 	float k = cl->k;
 	comand (*tmp)=new comand;
-	cl->addl(tmp,10);
+	cl->addl(tmp,11);
 	return;
 }
 
@@ -522,7 +547,7 @@ class texture_list
 			last->next = a;
 			last = a;
 		}
-		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(700)*k);
+		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(650)*k);
 		counter++;
 	}
 	void destroy()

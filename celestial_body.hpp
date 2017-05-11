@@ -115,13 +115,28 @@ class Celestial_Body: public Phase_vector
 	}
 };
 
+typedef struct _Atlas_node
+{
+	Celestial_Body body;
+	sf::CircleShape avatar;
+	_Atlas_node* next;
+} *Atlas_node, Atlas_node_el;
+
 double x(double x_m, double scale);
 
 double y(double y_m, double scale);
 
+double x(double x_m, double scale,double aph,double b);
+
+double y(double y_m, double scale,double aph,double b);
+
 double x(double x_m, double scale,double aph, sf::Vector2i p,double b);
 
 double y(double y_m, double scale,double aph, sf::Vector2i p,double b);
+
+double x(double x_m, double scale,double aph, sf::Vector2i p,double b, Atlas_node target);
+
+double y(double x_m, double scale,double aph, sf::Vector2i p,double b, Atlas_node target);
 
 double x_satellite(double x, Celestial_Body* a);
 
@@ -131,13 +146,6 @@ double v_x_satellite(double v_x, Celestial_Body* a);
 
 double v_y_satellite(double v_y, Celestial_Body* a);
 
-typedef struct _Atlas_node
-{
-	Celestial_Body body;
-	sf::CircleShape avatar;
-	_Atlas_node* next;
-} *Atlas_node, Atlas_node_el;
-
 class Atlas
 {
 	public:
@@ -145,6 +153,7 @@ class Atlas
 	Atlas_node first;
 	Atlas_node last;
 	Atlas_node active;
+	Atlas_node active2;
 	int amount;
 	Atlas();
 	Atlas(Celestial_Body a);
@@ -155,6 +164,7 @@ class Atlas
 	void move(double scale);
 	void out();
 	double get_max();
+	sf::Vector2i mass_center(double scale ,double aph,double b); //This is new
 };
 
 void draw(Atlas* atl, sf::RenderWindow* window);
