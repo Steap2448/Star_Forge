@@ -1,0 +1,3 @@
+2 
+0 0 0 0 0 0 20 2.18741e+30 255 system_files/object_textures/sun.png ACA 
+2.62843e+12 0 0 6553.44 0 0 20 1.80361e+30 255 system_files/object_textures/venus.png ACB 
