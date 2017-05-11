@@ -1,0 +1,9 @@
+8 
+0 0 0 0 0 0 6 1.59511e+29 255 system_files/object_textures/sun.png TRAPPIST1 
+1.66203e+09 0 0 79997.7 0 0 6 4.71803e+24 255 system_files/object_textures/mercury.png TRAPPIST1B 
+2.27688e+09 0 0 68369.9 0 0 6 9.73467e+24 255 system_files/object_textures/planet.png TRAPPIST1C 
+3.20887e+09 0 0 57621.3 0 0 6 1.97082e+24 255 system_files/object_textures/869229c569782d3b4159fa63707117d0.jpg TRAPPIST1D 
+4.21567e+09 0 0 50261.3 0 0 6 1.43333e+24 255 system_files/object_textures/Arid_World.jpg TRAPPIST1E 
+5.55008e+09 0 0 43840.1 0 0 6 2.14999e+24 255 system_files/object_textures/URSO8jh.jpg TRAPPIST1F 
+6.74686e+09 0 0 39719.4 0 0 6 3.38026e+24 255 system_files/object_textures/inxs_600b.jpg TRAPPIST1G 
+8.91603e+09 0 0 34551 0 0 6 5.13608e+23 255 system_files/object_textures/Arid_World.jpg TRAPPIST1H 

@@ -1,0 +1,5 @@
+4 
+0 0 0 0 0 0 10 1.84935e+30 255 system_files/object_textures/sun.png 61VIR 
+7.50996e+09 0 0 129571 0 0 5 3.16526e+25 255 system_files/object_textures/planet.png 61VIRB 
+3.25375e+10 0 0 62233.9 0 0 5 1.12277e+26 255 system_files/object_textures/earth.png 61VIRC 
+7.12086e+10 0 0 42097.7 0 0 5 1.41541e+26 255 system_files/object_textures/869229c569782d3b4159fa63707117d0.jpg 61VIRD 

@@ -4,7 +4,7 @@ std::string l = ".";
 std::string l2 = "-";
 Color gray(200,200,200,255);
 char NAME_PULL[2][20] = {"  OBJECT NAME:","  SYSTEM NAME:"};
-char PULL2[6][20] = {"   Enter mass:"," Enter radius:","      Enter x:","      Enter y:","     Enter Vx:","     Enter Vy:"};
+char PULL2[6][20] = {"          Mass:","       Radius:","                X:","                Y:","               Vx:","               Vy:"};
 std::string::size_type sz;
 
 class title
@@ -437,7 +437,7 @@ void input(data* a,Event* event)
 	}
 }
 
-int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi)
+int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas atl,Music* furi,int mode)
 {
 	Music me;
 	me.openFromFile("system_files/me.ogg");
@@ -449,9 +449,11 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	r1.loadFromFile("system_files/error.png");
 	Celestial_Body* planet;
 	object* obj; 
-	double ch = 0;
-	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+550)),add("system_files/add.png",SizeS,k,(LENGTH+210),(HEIGHT+350)),reset("system_files/CS.png",SizeS,k,(LENGTH+210),(HEIGHT+450)),hint("system_files/hint.png",Vector2f(30,30),k,55,55);
+	comand save("system_files/save.png",SizeS,k,(LENGTH+210),(HEIGHT+550)),add("system_files/add.png",SizeS,k,(LENGTH+210),(HEIGHT+350)),reset("system_files/clear.png",SizeS,k,(LENGTH+210),(HEIGHT+450)),hint("system_files/hint.png",Vector2f(30,30),k,55,55);
+	comand cent("system_files/cent.png",SizeS,k,(50),(HEIGHT+450)),col("system_files/col.png",SizeS,k,(50),(HEIGHT+550));
 	texture_list t10(k);
+	col.button.setFillColor(Color::Red);
+	cent.button.setFillColor(Color::Red);
 	RectangleShape alarm(Vector2f(500,100)*k);
 	alarm.setPosition(WIDTH/2,WIDTH/2);
 	alarm.setTexture(&r1);
@@ -468,10 +470,14 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	Clock clock;
 	Vector2i movl(0,0);
 	double blo = 1;
+	double blorp = 1;
 	int snd = 0;
 	int i = 1;
 	int fl = 0;
 	int hnt = 0;
+	int cn = 0;
+	int blip = 0;
+	ai = 0;
 	Text text2;
 	Font font;
 	font.loadFromFile("arial.ttf");
@@ -488,7 +494,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	Phase_space* attr = attr_creator(&atl); // Проверка пустого атласа и атласа с одним объектом (Alex: done)
 	ol.scroll(0);
 	t10.scroll(0);
-	double range=atl.get_max();
+	range=atl.get_max();
 	Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*2);	
 	while (i) 
 	{
@@ -499,7 +505,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		shape->setPosition(p.x,p.y);
 		while (window->pollEvent(event))
 		{	
-			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH && !hint.pressed(p,k))
+			if ((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Left)&& p.x < WIDTH && !hint.pressed(p,k)&& !col.pressed(p,k)&& !cent.pressed(p,k))
 			{
 				movl.x = -(p.x-WIDTH/2);
 				movl.y = -(p.y-WIDTH/2);
@@ -507,28 +513,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Right)
 			{
 				t10.scroll(1);
-			}
-			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
-			{
-				blo*=1.1;
-				tmp = atl.first;
-				while(tmp)
-				{
-					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
-					tmp=tmp->next;
-				}
-				std::cout<<blo<<"\n";
-			}
-			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
-			{
-				blo*=1/1.1;
-				tmp = atl.first;
-				while(tmp)
-				{
-					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
-					tmp=tmp->next;
-				}
-				std::cout<<blo<<"\n";
 			}
 			if(event.type == Event::KeyPressed && event.key.code == Keyboard::Left)
 			{
@@ -569,7 +553,8 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 									block.last_update();
 					if(block.first->all_res && block.first->next->all_res)
 					{
-						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res),(double)(block.first->all_res),t10.path,name1.name);
+						blorp = pow(1.1,blip);
+						planet = new Celestial_Body((double)(block.first->next->next->all_res),(double)(block.first->next->next->next->all_res),(double)(block.first->next->next->next->next->all_res),(double)(block.first->next->next->next->next->next->all_res),(double)(block.first->next->next->all_res)*0,(double)(block.first->next->next->next->all_res)*0,(double)(block.first->next->all_res)*blorp,(double)(block.first->all_res),t10.path,name1.name);
 						atl.add(planet);
 						atl.last->avatar.setPosition(atl.last->body.x,atl.last->body.y);
 						obj = new object(atl.last,&(ol.font),k);
@@ -605,9 +590,67 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 						}
 					}
 				}
+				if (col.pressed(p,k))
+				{
+					switch (ai)
+					{
+						case (0) :
+						{
+							ai=1;
+							col.button.setFillColor(Color::Green);
+							break;
+						}
+						case (1):
+						{
+							ai=0;
+							col.button.setFillColor(Color::Red);
+							break;
+						}
+					}
+				}
+				if (cent.pressed(p,k))
+				{
+					switch (cn)
+					{
+						case (0) :
+						{
+							cn=1;
+							cent.button.setFillColor(Color::Green);
+							break;
+						}
+						case (1):
+						{
+							cn=0;
+							cent.button.setFillColor(Color::Red);
+							break;
+						}
+					}
+				}
 				if (fatal_error)
 				{
 					i = 0;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::X)
+			{
+				blo*=1.1;
+				blorp*=1/blo*0.05+1.2; 
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp=tmp->next;
+				}
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::Z)
+			{
+				blo*=1/1.1;
+				blorp*=1/blo*0.05+1.2; 
+				tmp = atl.first;
+				while(tmp)
+				{
+					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp=tmp->next;
 				}
 			}
 			if(event.type == Event::Closed || 
@@ -636,8 +679,21 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 			name.update();
 			name1.update();
 		}
-		if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
-		if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		if(cn)
+		{
+			movl.x = atl.mass_center(WIDTH,range,blo).x;
+			movl.y = atl.mass_center(WIDTH,range,blo).y;
+		}
+		if(mode == 1)
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+		}
+		if(mode == 0)
+		{
+			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
+			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH,  attr, range/WIDTH*0.001,range,movl,blo);
+		}
 		window->clear();
 		window->draw(bg);
 		draw(&atl, window);
@@ -647,7 +703,6 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		name.draw(window);
 		name1.draw(window);
 		draw(&t10,window);
-		ch++;
 		if (fatal_error) 
 		{
 			window->draw(alarm);
@@ -655,15 +710,17 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		}
 		if (snd == 1) 
 		{
-				furi->pause();;
-				me.play();
-				snd ++;
+			furi->pause();;
+			me.play();
+			snd ++;
 		}
 		if (hnt) window->draw(rules);
 		window->draw(save.button);
 		window->draw(add.button);
 		window->draw(reset.button);
 		window->draw(hint.button);
+		window->draw(col.button);
+		window->draw(cent.button);
 		window->draw((*shape));
 		window->display();
 	}

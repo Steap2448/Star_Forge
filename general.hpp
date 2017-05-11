@@ -2,6 +2,8 @@
 #define GENERAL
 
 int fatal_error = 0;
+int ai = 0;
+double range;
 
 #include <iostream>
 #include <pthread.h>

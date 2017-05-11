@@ -16,7 +16,7 @@
 #define T_SCALE 1
 #define WIDTH 768.0
 #define speed 6.0
-char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
+char PULL[12][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/rough.png","system_files/CS.png"};
 
 class comand
 {
@@ -464,7 +464,7 @@ void Settings_(comand_list* cl)
 {
 	float k = cl->k;
 	comand (*tmp)=new comand;
-	cl->addl(tmp,10);
+	cl->addl(tmp,11);
 	return;
 }
 

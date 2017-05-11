@@ -194,7 +194,7 @@ double v_y_satellite(double v_y, Celestial_Body* a)
 double distance(double x1, double y1, double x2, double y2, double err)
 {
 	double dist = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-	if (dist <= 2e8) fatal_error = 1;
+	if (dist <= range/10e3 && ai) fatal_error = 1;
 	return dist;
 }
 
