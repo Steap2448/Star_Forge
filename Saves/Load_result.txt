@@ -1,5 +1,0 @@
-4 
-0 0 0 0 0 0 11.1111 1.9885e+30 255 system_files/sun.png SUN 
-1.521e+11 0 0 29783 0 0 3.88889 5.9726e+24 255 system_files/earth.png EARTH 
-4.6e+10 0 0 58980 0 0 3.88889 3.3011e+23 255 system_files/mercury.png MERCURY 
-1.0748e+11 0 0 35260 0 0 3.88889 4.8675e+24 255 system_files/venus.png VENUS 

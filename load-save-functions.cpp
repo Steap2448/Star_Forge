@@ -3,10 +3,11 @@
 #include <fstream>
 #include <dirent.h>
 #include <SFML/Graphics.hpp>
-#include "celestial_body.h"
+#include "celestial_body.hpp"
 std::string SAVES="Saves/";
 std::string DOTTXT=".txt";
 
+using namespace sf;
 
 typedef struct _filename
 {
@@ -20,10 +21,12 @@ class filename_list
 	public:
 	filename *first;
 	filename *last;
+	int counter;
 	filename_list()
 	{
 		first = NULL;
 		last = NULL;
+		counter = 0;
 	}
 	void add(std::string str)
 	{
@@ -43,7 +46,26 @@ class filename_list
 			first = tmp;
 		}
 	}
-	
+	void show()
+	{
+		filename* current;
+		current = first;
+		while(current)
+		{
+			std::cout<<current->name<<"\n";
+			current = current->next;
+		}
+	}
+	void destroy()
+	{
+		filename* current = first;
+		while(current!=NULL)
+		{
+			current = first->next;
+			delete first;
+			first = current;
+		}
+	}
 };
 
 
@@ -66,7 +88,8 @@ int save_system(Atlas atl, std::string name)
 
 void load_system(std::string file_name, Atlas* atl)
 {
-	std::string path_tmp = SAVES + file_name + DOTTXT;
+	atl->name = file_name.substr(0, file_name.find("."));
+	std::string path_tmp = SAVES + file_name;
 	const char* path = path_tmp.c_str();
 	std::ifstream fin(path);
 	int amount_for_cycle = 0;
@@ -86,15 +109,10 @@ void load_system(std::string file_name, Atlas* atl)
 }
 
 
-void dir_preview(filename_list *list_ptr)
+void dir_preview(filename_list *list_ptr,std::string path)
 {
-	DIR* dir_ptr = opendir("Saves");
-	
-	int i = 0;
-	for(i = 0; i < 2; i++)
-	{
-		struct dirent* tmp = readdir(dir_ptr);
-	}
+	const char* path_char = path.c_str();
+	DIR* dir_ptr = opendir(path_char);
 	while(1)
 	{
 		struct dirent* tmp = readdir(dir_ptr);
@@ -103,13 +121,12 @@ void dir_preview(filename_list *list_ptr)
 			closedir(dir_ptr);
 			return;
 		}
-		
 		std::string file_name = tmp->d_name;
-		file_name = file_name.substr(0, file_name.find("."));         //убирание окончания .txt
-		//std::cout << "file_name = "<<file_name <<std::endl;
-		
-		//std::cout << tmp->d_name <<std::endl;
-		list_ptr->add(file_name);
+		if(file_name!="."&&file_name!="..")
+		{
+			list_ptr->add(file_name);
+			list_ptr->counter++;
+		}
 		
 		
 	}
