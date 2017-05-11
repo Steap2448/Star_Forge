@@ -10,7 +10,7 @@
          * Load doesn't show information about the system
          * Parameters of existing planets and stars are not shown
          * There are no distinctions between stars and planets -- everything is considered a celestial body
-    * Limitations -- 50 mb of RAM
+    * Limitations -- no more than ~320 objects in a system, for optimal performance no textures heavier than 1Mb
     * Environment - Linux, g++
 3. Development
     * Components (Interface)
