@@ -25,7 +25,7 @@ int main()
 	background2.setTexture(&t10);
 	Atlas atl;
 	Clock clock;
-	RenderWindow window(VideoMode(1920*k,WIDTH),"Star Forge",Style::Fullscreen);
+	RenderWindow window(VideoMode(1920*k,WIDTH),"Star Forge"/*,Style::Fullscreen*/);
 	window.setMouseCursorVisible(false);
 	ConvexShape* shape = mouse_create();
 	Vector2i p;

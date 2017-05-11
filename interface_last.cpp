@@ -14,7 +14,7 @@
 #define HEIGHT2 300
 #define LENGTH2 1600
 #define T_SCALE 1
-#define WIDTH 1080.0
+#define WIDTH 768.0
 #define speed 6.0
 char PULL[11][30]={"system_files/new.png","system_files/load.png","system_files/settings.png","system_files/exit.png","system_files/sun.jpeg","system_files/earth.jpeg","system_files/mercury.jpg","system_files/venus.jpg","system_files/title.png","system_files/accurate.png","system_files/CS.png"};
 
@@ -522,7 +522,7 @@ class texture_list
 			last->next = a;
 			last = a;
 		}
-		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(700)*k);
+		a->sample.setPosition((1400+counter*(Size3.x+10))*k,(650)*k);
 		counter++;
 	}
 	void destroy()
