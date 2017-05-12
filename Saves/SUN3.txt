@@ -1,0 +1,13 @@
+12 
+1.81669e+12 -6.62178e+10 -32.7967 -3802.34 0 0 10 1.9885e+30 255 system_files/object_textures/sun.png SUN 
+2.16543e+13 7.81417e+12 92692.5 34931.7 0 0 2 3.3011e+23 255 system_files/object_textures/mercury.png MERCURY 
+9.42036e+12 -8.23522e+12 36798 -37596.1 0 0 2 4.8675e+24 255 system_files/object_textures/venus.png VENUS 
+-2.90221e+14 2.60103e+13 -2.60229e+06 223035 0 0 2 5.9726e+24 255 system_files/object_textures/earth.png EARTH 
+-1.59906e+13 -9.06639e+12 -76811.7 -42546.3 0 0 2 6.4171e+23 255 system_files/object_textures/mercury.png MARS 
+1.46256e+12 1.27049e+12 -8680.46 27669.3 0 0 8 1.898e+27 255 system_files/object_textures/planet.png JUPITER 
+2.92071e+12 -1.28187e+12 12226.6 7078.46 0 0 6 5.6834e+26 255 system_files/object_textures/869229c569782d3b4159fa63707117d0.jpg SATURN 
+1.91567e+12 -2.12056e+12 10249.2 6245.37 0 0 5 8.6813e+25 255 system_files/object_textures/inxs_600b.jpg URANUS 
+-3.28176e+12 2.14319e+12 -503.452 -5190.88 0 0 5 1.02413e+26 255 system_files/object_textures/URSO8jh.jpg NEPTUNE 
+6.67461e+12 1.78028e+12 -5178.81 2396.93 0 0 10 1.2e+30 255 _ SUN2 
+1.91889e+12 1.04026e+12 10391.9 5886.93 0 0 10 1.2e+30 255 _ SUN2 
+2.39535e+12 2.12459e+12 -5139.1 6992.7 0 0 10 1.2e+30 255 _ SUN2 

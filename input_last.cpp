@@ -1,4 +1,6 @@
 #include "interface_last.cpp"
+#define CONST 1
+#define CONST1 0.01
 using namespace sf;
 std::string l = ".";
 std::string l2 = "-";
@@ -356,7 +358,6 @@ void input(msBox* a,Event* event)
 			a->step=1;
 			a->f2.setFillColor(Color::White);
 			a->f1.setFillColor(gray);
-			std::cout<<"1\n";
 			return;
 		}		
 		if(a->string1.size()<7)
@@ -401,7 +402,6 @@ void input(msBox* a,Event* event)
 				a->first->step = 0;
 				a->first->f1.setFillColor(Color::White);
 			}
-			std::cout<<"2\n";
 			event->key.code = Keyboard::PageUp;
 			return;
 		}		
@@ -470,6 +470,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 	Clock clock;
 	Vector2i movl(0,0);
 	double blo = 1;
+	double time_c = 1;
 	double blorp = 1;
 	int snd = 0;
 	int i = 1;
@@ -534,7 +535,8 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 					attr_remove(attr, &atl);
 					ol.remove();
 					ol.scroll(0);
-					range=atl.get_max();
+					range=atl.get_medium();
+					if (cn) range = atl.get_medium(movl);
 				}
 			}
 			if((event.type == Event::MouseButtonPressed)&&(event.mouseButton.button == Mouse::Right))
@@ -562,7 +564,8 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 						attr_add(attr, planet); // добавление в пустой атлас (Alex: done)
 						delete planet;
 						ol.scroll(0);
-						range=atl.get_max();
+						range=atl.get_medium();
+						if (cn) range = atl.get_medium(movl);
 					}
 				}
 				if (save.pressed(p,k) && name1.name.size())
@@ -638,7 +641,7 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 				tmp = atl.first;
 				while(tmp)
 				{
-					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp->avatar.setScale(1.3945*pow(blo, -0.222),1.3945*pow(blo, -0.222));
 					tmp=tmp->next;
 				}
 			}
@@ -649,10 +652,20 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 				tmp = atl.first;
 				while(tmp)
 				{
-					tmp->avatar.setScale(1/blo*0.05+1.2,1/blo*0.05+1.2);
+					tmp->avatar.setScale(1.3945*pow(blo, -0.222),1.3945*pow(blo, -0.222));
 					tmp=tmp->next;
 				}
 			}
+			
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::A)
+			{
+				if (time_c <= 5) time_c*=1.1;
+			}
+			if(name.flag==0 && name1.flag==0 &&event.type == Event::KeyPressed && event.key.code == Keyboard::S)
+			{
+				if (time_c >= 0.5) time_c*=1/1.1;
+			}
+			
 			if(event.type == Event::Closed || 
 			(event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
 			i=0;
@@ -686,12 +699,12 @@ int work(RenderWindow* window,ConvexShape* shape,RectangleShape bg,float k,Atlas
 		}
 		if(mode == 1)
 		{
-			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
+			if(fl&&!fatal_error) Motion(&atl, (time_c * time), 0.05 * (time_c * time), WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
 			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH, 0.01e-19, attr, range/WIDTH*0.001,range,movl,blo);
 		}
 		if(mode == 0)
 		{
-			if(fl&&!fatal_error) Motion(&atl, time, 0.1 * time, WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
+			if(fl&&!fatal_error) Motion(&atl, (time_c * time), 0.05 * (time_c * time), WIDTH, attr, range/WIDTH*0.001,range,movl,blo);
 			if(!fl&&!fatal_error) Motion(&atl, 0, 0, WIDTH,  attr, range/WIDTH*0.001,range,movl,blo);
 		}
 		window->clear();

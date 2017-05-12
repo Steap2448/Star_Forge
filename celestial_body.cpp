@@ -581,6 +581,53 @@ sf::Vector2i Atlas::mass_center(double scale,double aph,double b) //This is new
 }
 
 
+double Atlas::get_max(sf::Vector2i mass_center)
+{
+	if (amount == 0) return 0;
+	if (amount == 1) return 1.5e11;
+	double max = 0, k;
+	Atlas_node tmp = first;
+	while (tmp != NULL)
+	{
+		k = sqrt(((tmp->body.x - mass_center.x) * (tmp->body.x - mass_center.x)) + ((tmp->body.y - mass_center.y) * (tmp->body.y - mass_center.y)));
+		if (k > max) max = k;
+		tmp = tmp -> next;
+	}
+	return max;
+}
+
+double Atlas::get_medium()
+{
+	if (amount == 0) return 0;
+	if (amount == 1) return 1.5e11;
+	double medium = 0, k;
+	Atlas_node tmp = first;
+	while (tmp != NULL)
+	{
+		medium += sqrt(((tmp->body.x) * (tmp->body.x)) + ((tmp->body.y) * (tmp->body.y)));
+		tmp = tmp -> next;
+	}
+	
+	medium = medium/amount;
+	return medium;
+}
+
+double Atlas::get_medium(sf::Vector2i mass_center)
+{
+	if (amount == 0) return 0;
+	if (amount == 1) return 1.5e11;
+	double medium = 0;
+	Atlas_node tmp = first;
+	while (tmp != NULL)
+	{
+		medium += sqrt(((tmp->body.x - mass_center.x) * (tmp->body.x - mass_center.x)) + ((tmp->body.y - mass_center.y) * (tmp->body.y - mass_center.y)));
+		tmp = tmp -> next;
+	}
+	
+	medium = medium/amount;
+	return medium;
+}
+
 
 
 
